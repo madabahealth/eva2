@@ -115,6 +115,57 @@
         .login-btn:hover {
             background-color: #2980b9;
         }
+
+        html {
+            min-height: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            padding:
+                max(15px, env(safe-area-inset-top))
+                max(15px, env(safe-area-inset-right))
+                max(15px, env(safe-area-inset-bottom))
+                max(15px, env(safe-area-inset-left));
+            box-sizing: border-box;
+        }
+
+        input, button {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-group input {
+            font-size: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                width: 100%;
+                max-width: 420px;
+                padding: 28px 20px;
+                border-radius: 16px;
+            }
+
+            .login-title {
+                font-size: 1.25em;
+            }
+
+            .login-subtitle {
+                font-size: 1.05em;
+                margin-bottom: 22px;
+            }
+
+            h1 {
+                font-size: 1.3em;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -134,57 +185,40 @@
         </form>
     </div>
 
-    <!-- كود الحماية - مفصول تماماً عن كود العمل -->
+    <!-- حماية خفيفة ومتوافقة مع iPhone / iPad -->
     <script>
-    (function(){
-        // 1. إلغاء الزر الأيمن
-        document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
+    (function () {
+        'use strict';
 
-        // 2. حظر اختصارات لوحة المفاتيح
-        document.addEventListener('keydown', function(e){
-            if(e.key === 'F12' || e.keyCode === 123){ e.preventDefault(); return false; }
-            if(e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c','K','k','M','m'].indexOf(e.key) !== -1){ e.preventDefault(); return false; }
-            if(e.ctrlKey && ['U','u','S','s','P','p'].indexOf(e.key) !== -1){ e.preventDefault(); return false; }
-            if(e.ctrlKey && e.key === 'A' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA'){ e.preventDefault(); return false; }
-            if(e.ctrlKey && e.key === 'a' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA'){ e.preventDefault(); return false; }
-            if(e.key === 'PrintScreen'){ e.preventDefault(); document.body.style.filter='blur(50px)'; setTimeout(function(){ document.body.style.filter='none'; },100); return false; }
-            // ماك
-            if(e.metaKey && e.altKey && ['I','i','U','u','J','j','C','c'].indexOf(e.key) !== -1){ e.preventDefault(); return false; }
-        });
+        // منع القائمة السياقية والسحب فقط، بدون أي فحص لحجم نافذة Safari
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        }, { passive: false });
 
-        // 3. منع السحب
-        document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; });
-        document.addEventListener('drop', function(e){ e.preventDefault(); return false; });
+        document.addEventListener('dragstart', function (e) {
+            e.preventDefault();
+        }, { passive: false });
 
-        // 4. منع النسخ والقص خارج الحقول
-        document.addEventListener('copy', function(e){ if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA'){ e.preventDefault(); } });
-        document.addEventListener('cut', function(e){ if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA'){ e.preventDefault(); } });
+        // منع تحديد النص خارج حقول الإدخال
+        document.addEventListener('selectstart', function (e) {
+            var tag = e.target && e.target.tagName;
+            if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+                e.preventDefault();
+            }
+        }, { passive: false });
 
-        // 5. منع الطباعة
-        window.addEventListener('beforeprint', function(){ document.body.style.display='none'; });
-        window.addEventListener('afterprint', function(){ document.body.style.display='flex'; });
+        // حماية الصور من السحب
+        function protectImages() {
+            document.querySelectorAll('img').forEach(function (img) {
+                img.setAttribute('draggable', 'false');
+            });
+        }
 
-        // 6. تنظيف Console
-        setInterval(function(){ console.clear(); }, 300);
-
-        // 7. كشف DevTools
-        var devOpen = false;
-        setInterval(function(){
-            var w = window.outerWidth - window.innerWidth > 160;
-            var h = window.outerHeight - window.innerHeight > 160;
-            if(w || h){
-                if(!devOpen){ devOpen = true; document.body.innerHTML = ''; document.head.innerHTML = ''; try{ window.location.replace('about:blank'); }catch(ex){} }
-            } else { devOpen = false; }
-        }, 500);
-
-        // 8. منع view-source
-        if(window.location.protocol === 'view-source:'){ window.location.href = 'about:blank'; }
-
-        // 9. حماية الصور
-        document.querySelectorAll('img').forEach(function(img){ img.setAttribute('draggable','false'); });
-
-        // 10. منع dblclick تحديد
-        document.addEventListener('dblclick', function(e){ if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA'){ e.preventDefault(); } });
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', protectImages);
+        } else {
+            protectImages();
+        }
     })();
     </script>
 
@@ -981,8 +1015,13 @@
             var errorMessage = document.getElementById('errorMessage');
             
             if (employees[employeeId]) {
-                sessionStorage.setItem('employeeId', employeeId);
-                sessionStorage.setItem('employeeName', employees[employeeId]);
+                try {
+                    sessionStorage.setItem('employeeId', employeeId);
+                    sessionStorage.setItem('employeeName', employees[employeeId]);
+                } catch (storageError) {
+                    // Safari قد يمنع sessionStorage في بعض أوضاع الخصوصية؛
+                    // لا نوقف تسجيل الدخول بسبب ذلك.
+                }
                 window.location.href = 'index.html';
             } else {
                 errorMessage.style.display = 'block';

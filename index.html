@@ -708,65 +708,124 @@
             margin-top: 3px;
             text-align: center;
         }
-    </style>
     
+        /* === تحسينات التوافق مع iPhone / Safari === */
+        html {
+            min-height: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        input, select, button, textarea {
+            -webkit-appearance: none;
+            appearance: none;
+            font-family: inherit;
+        }
+
+        input, select {
+            font-size: 16px;
+        }
+
+        button, select {
+            touch-action: manipulation;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                max-width: 100%;
+                min-height: 100vh;
+                min-height: -webkit-fill-available;
+                margin: 0;
+                padding:
+                    max(14px, env(safe-area-inset-top))
+                    max(12px, env(safe-area-inset-right))
+                    max(14px, env(safe-area-inset-bottom))
+                    max(12px, env(safe-area-inset-left));
+                border-radius: 0;
+            }
+
+            .header {
+                min-height: 90px;
+                padding: 10px 0;
+            }
+
+            .user-info {
+                left: 8px;
+            }
+
+            .logo-container img {
+                max-width: 90px;
+            }
+
+            .selection-section {
+                padding: 18px 12px;
+            }
+
+            .tab-content {
+                padding: 12px 8px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .evaluation-table,
+            .middle-management-table {
+                min-width: 760px;
+            }
+
+            #tab4 .summary-table,
+            #supportServicesTab4 .summary-table {
+                width: 100%;
+                min-width: 0;
+            }
+
+            #tab4 .summary-table th,
+            #tab4 .summary-table td,
+            #supportServicesTab4 .summary-table th,
+            #supportServicesTab4 .summary-table td {
+                padding: 10px 8px;
+                font-size: 16px;
+            }
+
+            .final-grade-section {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .final-grade-section input {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .results-count-section {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+
+    </style>
     <script>
-        document.addEventListener('contextmenu', function(e) {
+        /* حماية خفيفة ومتوافقة مع Safari/iPhone — بدون كشف أدوات المطور أو إعادة توجيه الصفحة */
+        document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
-            return false;
         });
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.keyCode === 123) {
+
+        document.addEventListener('dragstart', function (e) {
+            if (e.target && e.target.tagName === 'IMG') {
                 e.preventDefault();
-                return false;
             }
-            
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-                e.preventDefault();
-                return false;
-            }
-            
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-                e.preventDefault();
-                return false;
-            }
-            
-            if (e.ctrlKey && e.keyCode === 85) {
-                e.preventDefault();
-                return false;
-            }
-            
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-                e.preventDefault();
-                return false;
-            }
-            
-            if (e.ctrlKey && e.keyCode === 83) {
-                e.preventDefault();
-                return false;
-            }
-        });
-        
-        document.addEventListener('mousedown', function(e) {
-            if (e.detail > 1) {
-                e.preventDefault();
-                return false;
-            }
-        });
-        
-        document.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        window.addEventListener('beforeprint', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        window.addEventListener('beforeunload', function(e) {
-            return '';
         });
     </script>
 </head>
@@ -1408,10 +1467,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthentication();
             
-            const savedEvaluationType = sessionStorage.getItem('selectedEvaluationType');
-            if (savedEvaluationType) {
-                document.getElementById('evaluationType').value = savedEvaluationType;
-                sessionStorage.removeItem('selectedEvaluationType');
+            let savedEvaluationType = null;
+            try {
+                savedEvaluationType = sessionStorage.getItem('selectedEvaluationType');
+                if (savedEvaluationType) {
+                    const evaluationSelect = document.getElementById('evaluationType');
+                    if (evaluationSelect) {
+                        evaluationSelect.value = savedEvaluationType;
+                    }
+                    sessionStorage.removeItem('selectedEvaluationType');
+                }
+            } catch (storageError) {
+                savedEvaluationType = null;
             }
             
             showEvaluationForms();
@@ -1482,8 +1549,9 @@
                 });
                 
                 input.addEventListener('paste', function(e) {
-                    const pastedData = (e.clipboardData || window.clipboardData).getData('text');
-                    if (!/^[0-9.-]*$/.test(pastedData)) {
+                    const clipboard = e.clipboardData || window.clipboardData;
+                    const pastedData = clipboard ? clipboard.getData('text') : '';
+                    if (pastedData && !/^[0-9.-]*$/.test(pastedData)) {
                         e.preventDefault();
                     }
                 });
@@ -1539,7 +1607,7 @@
                 weights.tab1Divisor = 10; // تصحيح الخطأ هنا
             } else if (evaluationType === 'auxiliaryServices') {
                 weights.tab1Weight = 0.60;
-                tab3MaxScoreSum = 30;
+                weights.tab3MaxScoreSum = 30;
                 weights.tab2MaxScoreSum = 10;
                 weights.tab1Divisor = 20; // تصحيح الخطأ هنا
             }
@@ -1553,8 +1621,12 @@
             const evaluationType = document.getElementById('evaluationType').value;
             
             if (evaluationType !== "") {
-                sessionStorage.setItem('selectedEvaluationType', evaluationType);
-                location.reload();
+                try {
+                    sessionStorage.setItem('selectedEvaluationType', evaluationType);
+                } catch (storageError) {}
+
+                // إعادة التحميل آمنة في Safari
+                window.location.reload();
             }
         }
 

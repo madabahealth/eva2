@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تقييم أداء الموظفين</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .container {
+            width: 95%;
+            max-width: 1300px;
+            min-height: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+        }
+        @media (max-width: 768px) {
+            body {
+                align-items: center;
+            }
+            .container {
+                width: 98%;
+                margin: 10px auto;
+                padding: 20px;
+                border-radius: 8px;
+            }
+            .header-title-main { font-size: 1.5em; }
+            .header-title-sub { font-size: 1.2em; }
+            .header-title-page { font-size: 1.1em; }
+            .selection-section label { font-size: 1.1em; }
+            .evaluation-table {
+                font-size: 0.9em;
+            }
+            .evaluation-table th, .evaluation-table td {
+                padding: 8px 5px;
+            }
+            .tab-content {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            padding-right: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logo-container {
+            text-align: center;
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-left: auto;
+        }
+        .logo-container img {
+            max-width: 120px;
+            height: auto;
+            pointer-events: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .user-name {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        .header-title-main {
+            font-size: 1.8em;
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .header-title-sub {
+            font-size: 1.4em;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .header-title-page {
+            font-size: 1.2em;
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+        .tab-content h3 {
+            color: #444;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .selection-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .selection-section label {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #555;
+        }
+        .selection-section select {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1.1em;
+            background-color: #fff;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23777" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: left 15px center;
+            background-size: 20px;
+            cursor: pointer;
+        }
+        .tabs-container {
+            display: none;
+        }
+        .tabs {
+            display: none;
+        }
+        .tab-button {
+            display: none;
+        }
+        .tab-content {
+            display: block;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            margin-bottom: 30px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-content h3 {
+            color: #444;
+            margin-bottom: 20px;
+        }
+        .evaluation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+        }
+        .evaluation-table th,
+        .evaluation-table td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        .evaluation-table th {
+            background-color: #eef5f5;
+            color: #444;
+            font-weight: 600;
+        }
+        #tab3 .evaluation-table th,
+        #underTrialTab .evaluation-table th,
+        #supportServicesTab .evaluation-table th {
+            white-space: normal;
+        }
+        .evaluation-table input[type="text"],
+        .evaluation-table input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1em;
+            box-sizing: border-box;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+        .evaluation-table .percent-input {
+            width: 60px;
+        }
+        .evaluation-table .max-score-input {
+            width: 60px;
+        }
+        #tab2 .evaluation-table input[type="text"],
+        #tab2 .evaluation-table input[type="number"],
+        #supportServicesTab2 .evaluation-table input[type="text"],
+        #supportServicesTab2 .evaluation-table input[type="number"] {
+            width: calc(100% - 25px);
+            display: inline-block;
+            text-align: center;
+            padding-right: 5px;
+        }
+        #tab2 .evaluation-table td,
+        #supportServicesTab2 .evaluation-table td {
+            position: relative;
+        }
+        #tab2 .evaluation-table td::after,
+        #supportServicesTab2 .evaluation-table td::after {
+            content: '%';
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-weight: normal;
+        }
+        #tab3 .evaluation-table input[type="text"],
+        #tab3 .evaluation-table input[type="number"],
+        #underTrialTab .evaluation-table input[type="text"],
+        #underTrialTab .evaluation-table input[type="number"],
+        #supportServicesTab .evaluation-table input[type="text"],
+        #supportServicesTab .evaluation-table input[type="number"] {
+            width: 90%;
+            text-align: center;
+        }
+        #tab3 .evaluation-table .achieved-percent-cell,
+        #supportServicesTab .evaluation-table .achieved-percent-cell {
+            position: relative;
+        }
+        #tab3 .evaluation-table .achieved-percent-cell input,
+        #supportServicesTab .evaluation-table .achieved-percent-cell input {
+            width: calc(100% - 25px);
+            text-align: center;
+            padding-right: 5px;
+            padding-left: 25px;
+        }
+        #tab3 .evaluation-table .achieved-percent-cell::after,
+        #supportServicesTab .evaluation-table .achieved-percent-cell::after {
+            content: '%';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-weight: normal;
+        }
+        #underTrialTab .evaluation-table input[type="text"],
+        #underTrialTab .evaluation-table input[type="number"] {
+            width: 90%;
+            text-align: center;
+        }
+        .evaluation-table .competency-name {
+            text-align: right;
+            font-weight: 500;
+        }
+        .evaluation-table .score-option label {
+            margin: 0 5px;
+            font-size: 0.95em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .evaluation-table .score-option input[type="radio"] {
+            margin-right: 3px;
+            margin-left: 3px;
+            transform: scale(1.1);
+        }
+        #tab1 .evaluation-table .achieved-ratio-cell,
+        #supportServicesTab1 .evaluation-table .achieved-ratio-cell {
+            position: relative;
+        }
+        #tab1 .evaluation-table .achieved-ratio-cell input[type="text"],
+        #tab1 .evaluation-table .achieved-ratio-cell input[type="number"],
+        #supportServicesTab1 .evaluation-table .achieved-ratio-cell input[type="text"],
+        #supportServicesTab1 .evaluation-table .achieved-ratio-cell input[type="number"] {
+            width: calc(100% - 25px);
+            display: inline-block;
+            text-align: center;
+            padding-right: 5px;
+            padding-left: 25px;
+            background-color: #fff;
+            cursor: text;
+        }
+        #tab1 .evaluation-table .achieved-ratio-cell::after,
+        #supportServicesTab1 .evaluation-table .achieved-ratio-cell::after {
+            content: '%';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-weight: normal;
+        }
+        .total-row {
+            background-color: #e6f2f9;
+            font-weight: bold;
+        }
+        .total-row th {
+            text-align: right;
+            padding-right: 20px;
+        }
+        .total-row td {
+            text-align: center;
+            vertical-align: middle;
+            position: relative;
+        }
+        .total-row .total-value-input {
+            width: 80px;
+            display: inline-block;
+            background-color: #fff;
+        }
+        #totalDesiredCompetencyCell {
+            text-align: center;
+        }
+        #totalDesiredCompetencyCell input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .final-evaluation-row {
+            background-color: #dbe9f5;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .final-evaluation-row th {
+            text-align: right;
+            padding-right: 20px;
+        }
+        button[type="submit"] {
+            background-color: #2ecc71;
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 25px auto 0 auto;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        button[type="submit"]:hover {
+            background-color: #27ae60;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+            text-align: center;
+        }
+        #tab3 .evaluation-table,
+        #supportServicesTab .evaluation-table {
+            table-layout: fixed;
+            width: 100%;
+        }
+        #tab3 .evaluation-table th:nth-child(1) { width: 5%; }
+        #tab3 .evaluation-table th:nth-child(2) { width: 50%; }
+        #tab3 .evaluation-table th:nth-child(3) { width: 15%; }
+        #tab3 .evaluation-table th:nth-child(4) { width: 15%; }
+        #tab3 .evaluation-table th:nth-child(5) { width: 15%; }
+        #supportServicesTab .evaluation-table th:nth-child(1) { width: 5%; }
+        #supportServicesTab .evaluation-table th:nth-child(2) { width: 50%; }
+        #supportServicesTab .evaluation-table th:nth-child(3) { width: 15%; }
+        #supportServicesTab .evaluation-table th:nth-child(4) { width: 15%; }
+        #supportServicesTab .evaluation-table th:nth-child(5) { width: 15%; }
+        #tab3 .evaluation-table th[colspan="2"],
+        #supportServicesTab .evaluation-table th[colspan="2"] {
+            text-align: center;
+        }
+        .results-count-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border: 1px solid #cceeff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .results-count-section label {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #337ab7;
+            margin-bottom: 0;
+        }
+        .results-count-section input[type="text"],
+        .results-count-section input[type="number"] {
+            width: 80px;
+            padding: 8px 12px;
+            border: 1px solid #aaddff;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+        }
+        
+        /* === تم التعديل هنا لجعل جدول التقرير النهائي بعرض متوازن (90% بدلاً من 100%) === */
+        #tab4 .summary-table,
+        #supportServicesTab4 .summary-table {
+            width: 90%; 
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        #tab4 .summary-table th,
+        #tab4 .summary-table td,
+        #supportServicesTab4 .summary-table th,
+        #supportServicesTab4 .summary-table td {
+            border: 1px solid #e0e0e0;
+            padding: 15px 20px;
+            text-align: right;
+            font-size: 1.1em;
+        }
+        #tab4 .summary-table th,
+        #supportServicesTab4 .summary-table th {
+            background-color: #eef5f5;
+            color: #444;
+            font-weight: 600;
+        }
+        #tab4 .summary-table td,
+        #supportServicesTab4 .summary-table td {
+            background-color: #fff;
+            color: #555;
+            text-align: center;
+            width: 35%; /* تم تعديل العرض ليكون 35% بدلاً من 40% */
+        }
+        /* ================================================ */
+
+        #tab4 .summary-table input[type="text"],
+        #tab4 .summary-table input[type="number"],
+        #supportServicesTab4 .summary-table input[type="text"],
+        #supportServicesTab4 .summary-table input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1.1em;
+            background-color: #f0f0f0;
+            box-sizing: border-box;
+        }
+        .final-grade-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #dbe9f5;
+            border: 1px solid #cceeff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2a6496;
+        }
+        .final-grade-section label {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+        
+        /* === تم التعديل هنا لتوسيع حقل التقدير العام بشكل معتدل === */
+        .final-grade-section input {
+            flex-grow: 1;
+            max-width: 450px; /* تم تعديله من 600px إلى 450px */
+            padding: 10px 15px;
+            border: 1px solid #99ccff;
+            border-radius: 5px;
+            font-size: 1.2em;
+            text-align: center;
+            background-color: #fff;
+        }
+        /* ============================================ */
+
+        #underTrialTab .evaluation-table {
+            table-layout: fixed;
+            width: 100%;
+        }
+        #underTrialTab .evaluation-table th:nth-child(1) { width: 5%; }
+        #underTrialTab .evaluation-table th:nth-child(2) { width: 60%; text-align: right; }
+        #underTrialTab .evaluation-table th:nth-child(3) { width: 15%; }
+        #underTrialTab .evaluation-table th:nth-child(4) { width: 20%; }
+        #underTrialTab .evaluation-table td:nth-child(2) { text-align: right; }
+        #underTrialTab .evaluation-table input[type="text"],
+        #underTrialTab .evaluation-table input[type="number"] {
+            width: 90%;
+        }
+        #underTrialTab .final-grade-section {
+            margin-top: 40px;
+            border-top: 2px solid #ccc;
+            padding-top: 20px;
+        }
+        .section-divider {
+            height: 2px;
+            background-color: #ddd;
+            margin: 40px 0;
+            border-radius: 1px;
+        }
+        #tab1 .evaluation-table .achieved-ratio-cell input[type="text"]::placeholder,
+        #tab1 .evaluation-table .achieved-ratio-cell input[type="number"]::placeholder,
+        #supportServicesTab1 .evaluation-table .achieved-ratio-cell input[type="text"]::placeholder,
+        #supportServicesTab1 .evaluation-table .achieved-ratio-cell input[type="number"]::placeholder {
+            color: #888;
+            font-style: italic;
+        }
+        .new-evaluation-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .new-evaluation-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .numeric-input {
+            direction: ltr;
+        }
+        
+        .centered-input {
+            text-align: center !important;
+        }
+        
+        .required-input {
+            border: 2px solid red !important;
+        }
+        
+        .middle-management-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+        }
+        
+        .middle-management-table th,
+        .middle-management-table td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .middle-management-table th {
+            background-color: #eef5f5;
+            color: #444;
+            font-weight: 600;
+        }
+        
+        .middle-management-table .competency-cell {
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .middle-management-table .importance-input,
+        .middle-management-table .achieved-input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        
+        .middle-management-table .score-input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1em;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+        }
+        
+        .middle-management-table .total-row td {
+            background-color: #e6f2f9;
+            font-weight: bold;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .middle-management-table .total-row .total-importance-cell {
+            background-color: #e6f2f9;
+            font-weight: bold;
+            color: #2c3e50;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .middle-management-table .total-row .total-score-cell {
+            background-color: #e6f2f9;
+            font-weight: bold;
+            color: #2c3e50;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .middle-management-table .final-evaluation-row td {
+            background-color: #dbe9f5;
+            font-weight: bold;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .middle-management-table .final-evaluation-row .final-evaluation-cell {
+            background-color: #dbe9f5;
+            font-weight: bold;
+            color: #2c3e50;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .middle-management-table .achieved-input {
+            color: rgba(0, 0, 0, 0.7);
+        }
+        
+        .input-hint {
+            font-size: 0.8em;
+            color: #888;
+            font-style: italic;
+            margin-top: 3px;
+            text-align: center;
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                e.preventDefault();
+                return false;
+            }
+            
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+                e.preventDefault();
+                return false;
+            }
+            
+            if (e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+                return false;
+            }
+            
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+                e.preventDefault();
+                return false;
+            }
+            
+            if (e.ctrlKey && e.keyCode === 83) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        document.addEventListener('mousedown', function(e) {
+            if (e.detail > 1) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        window.addEventListener('beforeprint', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        window.addEventListener('beforeunload', function(e) {
+            return '';
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="logo.png" alt="شعار مديرية صحة مادبا" class="logo">
+            </div>
+            <div class="user-info">
+                <div class="user-name" id="userName">مرحباً بك</div>
+                <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+            </div>
+        </div>
+        
+        <h3 class="header-title-main">المملكة الأردنية الهاشمية</h3>
+        <h4 class="header-title-sub">مديرية صحة محافظة مادبا</h4>
+        <h1 class="header-title-page">نظام تقييم أداء الموظفين</h1>
+
+        <div class="selection-section">
+            <label for="evaluationType">الرجاء تحديد نوع التقييم:</label>
+            <select id="evaluationType" onchange="handleEvaluationTypeChange()">
+                <option value="">-- اختر نوع التقييم --</option>
+                <option value="specialized">نموذج تقييم الوظائف التخصصية</option>
+                <option value="middle">نموذج تقييم وظائف الإدارة الوسطى</option>
+                <option value="supportServices">الوظائف الإدارية والمهنية المساندة</option>
+                <option value="auxiliaryServices">نموذج تقييم لوظائف الخدمات المساعدة والحرفية</option>
+                <option value="underTrial">نموذج الموظف تحت التجربة</option>
+            </select>
+        </div>
+
+        <div id="evaluationForms" class="tabs-container">
+            <button class="new-evaluation-btn" onclick="resetForm()">تقييم جديد</button>
+            
+            <div id="tab3" class="tab-content">
+                <h3 id="tab3-title">مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها</h3>
+                <p>الرجاء إدخال البيانات التالية:</p>
+                <div class="results-count-section">
+                    <label for="numResults">تحديد عدد النتائج المطلوب من الموظف تحقيقها (2-5):</label>
+                    <input type="text" id="numResults" value="5" min="2" max="5" class="numeric-input" onchange="generateTab3Rows()">
+                </div>
+                <table class="evaluation-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">الرقم</th>
+                            <th rowspan="2" style="width: 50%;">النتائج المطلوب من الموظف تحقيقها</th>
+                            <th colspan="1">الأهمية النسبية (العلامة القصوى)</th>
+                            <th rowspan="2">نسبة الإنجاز الفعلية (3)</th>
+                            <th rowspan="2">العلامة المستحقة (2)</th>
+                        </tr>
+                        <tr>
+                            <th>(وفق أهميتها النسبية)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tab3-tbody">
+                        </tbody>
+                </table>
+                <div id="tab3-error-message" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div id="middleManagementTab" class="tab-content" style="display: none;">
+                <h3 id="middleManagementTab-title">الكفايات ويخصص له ما نسبته (10%) من تقييم الأداء</h3>
+                <p>الرجاء إدخال البيانات الخاصة بالتقييم:</p>
+                <table class="middle-management-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">الكفايات السلوكية والقيادية</th>
+                            <th style="width: 20%;">الأهمية النسبية</th>
+                            <th style="width: 20%;">النسبة المحققة من الكفاية</th>
+                            <th style="width: 10%;">العلامة المستحقة للكفاية لدى الموظف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="middleManagement-tbody">
+                        <tr data-competency="communication">
+                            <td class="competency-cell">يتم الرجوع إلى مصفوفة الكفايات</td>
+                            <td><input type="text" class="importance-input numeric-input required-input" min="0" max="100" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="achieved-input numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="score-input numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="problemSolving">
+                            <td class="competency-cell">يتم الرجوع إلى مصفوفة الكفايات</td>
+                            <td><input type="text" class="importance-input numeric-input required-input" min="0" max="100" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="achieved-input numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="score-input numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="customerOrientation">
+                            <td class="competency-cell">يتم الرجوع إلى مصفوفة الكفايات</td>
+                            <td><input type="text" class="importance-input numeric-input required-input" min="0" max="100" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="achieved-input numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="score-input numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="accountability">
+                            <td class="competency-cell">يتم الرجوع إلى مصفوفة الكفايات</td>
+                            <td><input type="text" class="importance-input numeric-input required-input" min="0" max="100" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="achieved-input numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="score-input numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="innovation">
+                            <td class="competency-cell">يتم الرجوع إلى مصفوفة الكفايات</td>
+                            <td><input type="text" class="importance-input numeric-input required-input" min="0" max="100" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="achieved-input numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="score-input numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="teamwork">
+                            <td class="competency-cell">يتم الرجوع إلى مصفوفة الكفايات</td>
+                            <td><input type="text" class="importance-input numeric-input required-input" min="0" max="100" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="achieved-input numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="score-input numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="leadership">
+                            <td class="competency-cell">يتم الرجوع إلى مصفوفة الكفايات</td>
+                            <td><input type="text" class="importance-input numeric-input required-input" min="0" max="100" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="achieved-input numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateMiddleManagement()"></td>
+                            <td><input type="text" class="score-input numeric-input" readonly></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <th colspan="1" style="text-align: right;">المجموع</th>
+                            <td class="total-importance-cell">100%</td>
+                            <td></td>
+                            <td class="total-score-cell"><input type="text" id="totalMiddleManagementScore" class="total-value-input numeric-input" readonly style="border: none; background-color: transparent; color: #2c3e50; font-weight: bold; font-size: 1.1em; width: 100%; text-align: center;"></td>
+                        </tr>
+                        <tr class="final-evaluation-row">
+                            <th colspan="3" style="text-align: right;">التقييم النهائي</th>
+                            <td class="final-evaluation-cell"><input type="text" id="finalMiddleManagementEvaluation" class="total-value-input numeric-input" readonly style="border: none; background-color: transparent; color: #2c3e50; font-weight: bold; font-size: 1.1em; width: 100%; text-align: center;"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div class="input-hint">ملاحظة: النسبة المحققة من الكفاية يجب ألا تتجاوز 95%</div>
+                <div id="middleManagement-error-message" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div id="tab1" class="tab-content">
+                <h3 id="tab1-title">الكفايات ويخصص له ما نسبته (20%) من تقييم الأداء</h3>
+                <p>الرجاء إدخال البيانات الخاصة بالتقييم:</p>
+                <table class="evaluation-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">الكفايات السلوكية والقيادية</th>
+                            <th colspan="4">مستوى الكفاءة المطلوبة (3)</th>
+                            <th rowspan="2">النسبة المحققة من الكفاية (4)</th>
+                            <th rowspan="2">المستوى الفعلي للكفاية لدى الموظف (5)</th>
+                        </tr>
+                        <tr>
+                            <th>خبير (4)</th>
+                            <th>متقدم (3)</th>
+                            <th>متوسط (2)</th>
+                            <th>أساسي (1)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-competency="communication">
+                            <td class="competency-name">الاتصال والتواصل الفعال</td>
+                            <td class="score-option"><label><input type="radio" name="commScore" value="4" onchange="calculateAllTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="commScore" value="3" onchange="calculateAllTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="commScore" value="2" onchange="calculateAllTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="commScore" value="1" onchange="calculateAllTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllTab1()"></td>
+                            <td><input type="text" class="actual-level numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="problemSolving">
+                            <td class="competency-name">حل المشكلات</td>
+                            <td class="score-option"><label><input type="radio" name="probScore" value="4" onchange="calculateAllTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="probScore" value="3" onchange="calculateAllTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="probScore" value="2" onchange="calculateAllTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="probScore" value="1" onchange="calculateAllTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllTab1()"></td>
+                            <td><input type="text" class="actual-level numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="customerOrientation">
+                            <td class="competency-name">التوجه نحو متلقي الخدمة</td>
+                            <td class="score-option"><label><input type="radio" name="custScore" value="4" onchange="calculateAllTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="custScore" value="3" onchange="calculateAllTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="custScore" value="2" onchange="calculateAllTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="custScore" value="1" onchange="calculateAllTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllTab1()"></td>
+                            <td><input type="text" class="actual-level numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="accountability">
+                            <td class="competency-name">المساءلة</td>
+                            <td class="score-option"><label><input type="radio" name="accScore" value="4" onchange="calculateAllTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="accScore" value="3" onchange="calculateAllTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="accScore" value="2" onchange="calculateAllTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="accScore" value="1" onchange="calculateAllTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllTab1()"></td>
+                            <td><input type="text" class="actual-level numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="innovation">
+                            <td class="competency-name">الإبداع والابتكار</td>
+                            <td class="score-option"><label><input type="radio" name="innovScore" value="4" onchange="calculateAllTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="innovScore" value="3" onchange="calculateAllTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="innovScore" value="2" onchange="calculateAllTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="innovScore" value="1" onchange="calculateAllTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllTab1()"></td>
+                            <td><input type="text" class="actual-level numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="adaptability">
+                            <td class="competency-name">التكيف</td>
+                            <td class="score-option"><label><input type="radio" name="adaptScore" value="4" onchange="calculateAllTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="adaptScore" value="3" onchange="calculateAllTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="adaptScore" value="2" onchange="calculateAllTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="adaptScore" value="1" onchange="calculateAllTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllTab1()"></td>
+                            <td><input type="text" class="actual-level numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="selfDevelopment">
+                            <td class="competency-name">تنمية الذات</td>
+                            <td class="score-option"><label><input type="radio" name="selfDevScore" value="4" onchange="calculateAllTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="selfDevScore" value="3" onchange="calculateAllTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="selfDevScore" value="2" onchange="calculateAllTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="selfDevScore" value="1" onchange="calculateAllTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllTab1()"></td>
+                            <td><input type="text" class="actual-level numeric-input" readonly></td>
+                        </tr>
+                        <tr class="total-row">
+                            <th class="competency-name">المجموع</th>
+                            <td id="totalDesiredCompetencyCell" colspan="4">
+                                <input type="text" id="totalDesiredCompetency" class="total-value-input numeric-input" readonly>
+                            </td>
+                            <td colspan="1"></td>
+                            <td colspan="1"></td>
+                        </tr>
+                        <tr class="total-row">
+                            <th colspan="6">المجموع (المستوى الفعلي 6)</th>
+                            <td><input type="text" id="totalActualLevel" class="total-value-input numeric-input" readonly></td>
+                        </tr>
+                        <tr class="final-evaluation-row">
+                            <th colspan="6">التقييم النهائي (7)</th>
+                            <td><input type="text" id="finalEvaluation" class="total-value-input numeric-input" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="tab1-error-message" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div id="tab2" class="tab-content">
+                <h3 id="tab2-title">مجموع النسبة المستحقة لعناصر التميز الوظيفي</h3>
+                <p>الرجاء إدخال البيانات التالية:</p>
+                <table class="evaluation-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 55%;">البيان</th>
+                            <th style="width: 20%;">الأهمية النسبية (العلامة القصوى)</th>
+                            <th style="width: 25%;">النسبة المستحقة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-item="initiative">
+                            <td class="competency-name">المبادرة في تقديم أفكار إبداعية ومبادرات ومقترحات تؤدي إلى تحسين وتبسيط العمل.</td>
+                            <td><input type="text" class="max-score-input numeric-input centered-input required-input" oninput="calculateAllTab2()" min="0"></td>
+                            <td><input type="text" class="deserved-percentage numeric-input centered-input required-input" oninput="calculateAllTab2()" min="0"></td>
+                        </tr>
+                        <tr data-item="knowledgeTransfer">
+                            <td class="competency-name">نقل المعرفة للعاملين في الدائرة وفي القطاع العام من خلال تقديم ورشات عمل ودراسات وأبحاث ونشرات إرشادية.</td>
+                            <td><input type="text" class="max-score-input numeric-input centered-input required-input" oninput="calculateAllTab2()" min="0"></td>
+                            <td><input type="text" class="deserved-percentage numeric-input centered-input required-input" oninput="calculateAllTab2()" min="0"></td>
+                        </tr>
+                        <tr data-item="volunteering">
+                            <td class="competency-name">القيام بأنشطة تطوعية ضمن المسؤولية المجتمعية للدائرة.</td>
+                            <td><input type="text" class="max-score-input numeric-input centered-input required-input" oninput="calculateAllTab2()" min="0"></td>
+                            <td><input type="text" class="deserved-percentage numeric-input centered-input required-input" oninput="calculateAllTab2()" min="0"></td>
+                        </tr>
+                        <tr class="total-row">
+                            <th colspan="2" style="text-align: right; padding-right: 20px;">مجموع النسبة المستحقة</th>
+                            <td style="position: relative;">
+                                <input type="text" id="totalDeservedPercentage" class="total-value-input numeric-input centered-input" readonly style="width: calc(100% - 25px); text-align: center; padding-right: 5px;">
+                                <span style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%);">%</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="tab2-error-message" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div id="tab4" class="tab-content">
+                <h3>تقييم الأداء</h3>
+                <p>يرجى  إدراج النتائج التي يتم  احتسابها في الجزء الثاني من هذا النموذج:</p>
+                <table class="summary-table">
+                    <tbody>
+                        <tr>
+                            <th id="summary-tab3-title">أ- مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها</th>
+                            <td><input type="text" id="summaryTab3Mark" class="numeric-input" readonly></td>
+                        </tr>
+                        <tr>
+                            <th id="summary-tab1-title">ب- الكفايات ويخصص له ما نسبته (10%) من تقييم الأداء</th>
+                            <td><input type="text" id="summaryTab1Evaluation" class="numeric-input" readonly></td>
+                        </tr>
+                        <tr>
+                            <th id="summary-tab2-title">ج- مجموع النسبة المستحقة لعناصر التميز الوظيفي</th>
+                            <td><input type="text" id="summaryTab2Percentage" class="numeric-input" readonly></td>
+                        </tr>
+                        <tr class="total-row">
+                            <th>المجموع النهائي (العلامة)</th>
+                            <td><input type="text" id="finalTotalScore" class="numeric-input" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="final-grade-section">
+                    <label>* التقدير العام</label>
+                    <input type="text" id="overallGrade" class="numeric-input" readonly>
+                </div>
+            </div>
+
+            <div id="supportServicesTab" class="tab-content">
+                <h3 id="supportServicesTab-title">مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها</h3>
+                <p>الرجاء إدخال البيانات التالية:</p>
+                <div class="results-count-section">
+                    <label for="numResultsAux">تحديد عدد النتائج المطلوب من الموظف تحقيقها (2-5):</label>
+                    <input type="text" id="numResultsAux" value="5" min="2" max="5" class="numeric-input" onchange="generateSupportServicesTabRows()">
+                </div>
+                <table class="evaluation-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">الرقم</th>
+                            <th rowspan="2" style="width: 50%;">النتائج المطلوب من الموظف تحقيقها</th>
+                            <th colspan="1">الأهمية النسبية (العلامة القصوى)</th>
+                            <th rowspan="2">نسبة الإنجاز الفعلية (3)</th>
+                            <th rowspan="2">العلامة المستحقة (2)</th>
+                        </tr>
+                        <tr>
+                            <th>(وفق أهميتها النسبية)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="supportServicesTab-tbody">
+                    </tbody>
+                </table>
+                <div id="supportServicesTab-error-message" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div id="supportServicesTab1" class="tab-content">
+                <h3 id="supportServicesTab1-title">الكفايات ويخصص له ما نسبته (60%) من تقييم الأداء</h3>
+                <p>الرجاء إدخال البيانات الخاصة بالتقييم:</p>
+                <table class="evaluation-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">الكفايات السلوكية والقيادية</th>
+                            <th colspan="4">مستوى الكفاءة المطلوبة (3)</th>
+                            <th rowspan="2">النسبة المحققة من الكفاية (4)</th>
+                            <th rowspan="2">المستوى الفعلي للكفاية لدى الموظف (5)</th>
+                        </tr>
+                        <tr>
+                            <th>خبير (4)</th>
+                            <th>متقدم (3)</th>
+                            <th>متوسط (2)</th>
+                            <th>أساسي (1)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-competency="communication">
+                            <td class="competency-name">الاتصال والتواصل الفعال</td>
+                            <td class="score-option"><label><input type="radio" name="commScoreAux" value="4" onchange="calculateAllSupportServicesTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="commScoreAux" value="3" onchange="calculateAllSupportServicesTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="commScoreAux" value="2" onchange="calculateAllSupportServicesTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="commScoreAux" value="1" onchange="calculateAllSupportServicesTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio-aux numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllSupportServicesTab1()"></td>
+                            <td><input type="text" class="actual-level-aux numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="problemSolving">
+                            <td class="competency-name">حل المشكلات</td>
+                            <td class="score-option"><label><input type="radio" name="probScoreAux" value="4" onchange="calculateAllSupportServicesTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="probScoreAux" value="3" onchange="calculateAllSupportServicesTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="probScoreAux" value="2" onchange="calculateAllSupportServicesTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="probScoreAux" value="1" onchange="calculateAllSupportServicesTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio-aux numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllSupportServicesTab1()"></td>
+                            <td><input type="text" class="actual-level-aux numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="customerOrientation">
+                            <td class="competency-name">التوجه نحو متلقي الخدمة</td>
+                            <td class="score-option"><label><input type="radio" name="custScoreAux" value="4" onchange="calculateAllSupportServicesTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="custScoreAux" value="3" onchange="calculateAllSupportServicesTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="custScoreAux" value="2" onchange="calculateAllSupportServicesTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="custScoreAux" value="1" onchange="calculateAllSupportServicesTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio-aux numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllSupportServicesTab1()"></td>
+                            <td><input type="text" class="actual-level-aux numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="accountability">
+                            <td class="competency-name">المساءلة</td>
+                            <td class="score-option"><label><input type="radio" name="accScoreAux" value="4" onchange="calculateAllSupportServicesTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="accScoreAux" value="3" onchange="calculateAllSupportServicesTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="accScoreAux" value="2" onchange="calculateAllSupportServicesTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="accScoreAux" value="1" onchange="calculateAllSupportServicesTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio-aux numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllSupportServicesTab1()"></td>
+                            <td><input type="text" class="actual-level-aux numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="innovation">
+                            <td class="competency-name">الإبداع والابتكار</td>
+                            <td class="score-option"><label><input type="radio" name="innovScoreAux" value="4" onchange="calculateAllSupportServicesTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="innovScoreAux" value="3" onchange="calculateAllSupportServicesTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="innovScoreAux" value="2" onchange="calculateAllSupportServicesTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="innovScoreAux" value="1" onchange="calculateAllSupportServicesTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio-aux numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllSupportServicesTab1()"></td>
+                            <td><input type="text" class="actual-level-aux numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="adaptability">
+                            <td class="competency-name">التكيف</td>
+                            <td class="score-option"><label><input type="radio" name="adaptScoreAux" value="4" onchange="calculateAllSupportServicesTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="adaptScoreAux" value="3" onchange="calculateAllSupportServicesTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="adaptScoreAux" value="2" onchange="calculateAllSupportServicesTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="adaptScoreAux" value="1" onchange="calculateAllSupportServicesTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio-aux numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllSupportServicesTab1()"></td>
+                            <td><input type="text" class="actual-level-aux numeric-input" readonly></td>
+                        </tr>
+                        <tr data-competency="selfDevelopment">
+                            <td class="competency-name">تنمية الذات</td>
+                            <td class="score-option"><label><input type="radio" name="selfDevScoreAux" value="4" onchange="calculateAllSupportServicesTab1()">4</label></td>
+                            <td class="score-option"><label><input type="radio" name="selfDevScoreAux" value="3" onchange="calculateAllSupportServicesTab1()">3</label></td>
+                            <td class="score-option"><label><input type="radio" name="selfDevScoreAux" value="2" onchange="calculateAllSupportServicesTab1()">2</label></td>
+                            <td class="score-option"><label><input type="radio" name="selfDevScoreAux" value="1" onchange="calculateAllSupportServicesTab1()">1</label></td>
+                            <td class="achieved-ratio-cell"><input type="text" class="achieved-ratio-aux numeric-input required-input" min="0" max="95" placeholder="0-95" onchange="calculateAllSupportServicesTab1()"></td>
+                            <td><input type="text" class="actual-level-aux numeric-input" readonly></td>
+                        </tr>
+                        <tr class="total-row">
+                            <th class="competency-name">المجموع</th>
+                            <td id="totalDesiredCompetencyCellAux" colspan="4">
+                                <input type="text" id="totalDesiredCompetencyAux" class="total-value-input numeric-input" readonly>
+                            </td>
+                            <td colspan="1"></td>
+                            <td colspan="1"></td>
+                        </tr>
+                        <tr class="total-row">
+                            <th colspan="6">المجموع (المستوى الفعلي 6)</th>
+                            <td><input type="text" id="totalActualLevelAux" class="total-value-input numeric-input" readonly></td>
+                        </tr>
+                        <tr class="final-evaluation-row">
+                            <th colspan="6">التقييم النهائي (7)</th>
+                            <td><input type="text" id="finalEvaluationAux" class="total-value-input numeric-input" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="supportServicesTab1-error-message" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div id="supportServicesTab2" class="tab-content">
+                <h3 id="supportServicesTab2-title">مجموع النسبة المستحقة لعناصر التميز الوظيفي</h3>
+                <p>الرجاء إدخال البيانات التالية:</p>
+                <table class="evaluation-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 55%;">البيان</th>
+                            <th style="width: 20%;">الأهمية النسبية (العلامة القصوى)</th>
+                            <th style="width: 25%;">النسبة المستحقة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-item="initiative">
+                            <td class="competency-name">المبادرة في تقديم أفكار إبداعية ومبادرات ومقترحات تؤدي إلى تحسين وتبسيط العمل.</td>
+                            <td><input type="text" class="max-score-input-aux numeric-input centered-input required-input" oninput="calculateAllSupportServicesTab2()" min="0"></td>
+                            <td><input type="text" class="deserved-percentage-aux numeric-input centered-input required-input" oninput="calculateAllSupportServicesTab2()" min="0"></td>
+                        </tr>
+                        <tr data-item="knowledgeTransfer">
+                            <td class="competency-name">نقل المعرفة للعاملين في الدائرة وفي القطاع العام من خلال تقديم ورشات عمل ودراسات وأبحاث ونشرات إرشادية.</td>
+                            <td><input type="text" class="max-score-input-aux numeric-input centered-input required-input" oninput="calculateAllSupportServicesTab2()" min="0"></td>
+                            <td><input type="text" class="deserved-percentage-aux numeric-input centered-input required-input" oninput="calculateAllSupportServicesTab2()" min="0"></td>
+                        </tr>
+                        <tr data-item="volunteering">
+                            <td class="competency-name">القيام بأنشطة تطوعية ضمن المسؤولية المجتمعية للدائرة.</td>
+                            <td><input type="text" class="max-score-input-aux numeric-input centered-input required-input" oninput="calculateAllSupportServicesTab2()" min="0"></td>
+                            <td><input type="text" class="deserved-percentage-aux numeric-input centered-input required-input" oninput="calculateAllSupportServicesTab2()" min="0"></td>
+                        </tr>
+                        <tr class="total-row">
+                            <th colspan="2" style="text-align: right; padding-right: 20px;">مجموع النسبة المستحقة</th>
+                            <td style="position: relative;">
+                                <input type="text" id="totalDeservedPercentageAux" class="total-value-input numeric-input centered-input" readonly style="width: calc(100% - 25px); text-align: center; padding-right: 5px;">
+                                <span style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%);">%</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="supportServicesTab2-error-message" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div id="supportServicesTab4" class="tab-content">
+                <h3>تقييم الأداء</h3>
+                <p>يرجى  إدراج النتائج التي يتم  احتسابها في الجزء الثاني من هذا النموذج:</p>
+                <table class="summary-table">
+                    <tbody>
+                        <tr>
+                            <th id="summary-supportServicesTab-title">أ- مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها</th>
+                            <td><input type="text" id="summarySupportServicesTabMark" class="numeric-input" readonly></td>
+                        </tr>
+                        <tr>
+                            <th id="summary-supportServicesTab1-title">ب- الكفايات ويخصص له ما نسبته (60%) من تقييم الأداء</th>
+                            <td><input type="text" id="summarySupportServicesTab1Evaluation" class="numeric-input" readonly></td>
+                        </tr>
+                        <tr>
+                            <th id="summary-supportServicesTab2-title">ج- مجموع النسبة المستحقة لعناصر التميز الوظيفي</th>
+                            <td><input type="text" id="summarySupportServicesTab2Percentage" class="numeric-input" readonly></td>
+                        </tr>
+                        <tr class="total-row">
+                            <th>المجموع النهائي (العلامة)</th>
+                            <td><input type="text" id="finalTotalScoreAux" class="numeric-input" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="final-grade-section">
+                    <label>* التقدير العام</label>
+                    <input type="text" id="overallGradeAux" class="numeric-input" readonly>
+                </div>
+            </div>
+
+            <div id="underTrialTab" class="tab-content">
+                <h3>تقييم عناصر الأداء والسلوك الوظيفي</h3>
+                <p>الرجاء إدخال العلامات المتحققة لكل عنصر:</p>
+                <table class="evaluation-table">
+                    <thead>
+                        <tr>
+                            <th>الرقم</th>
+                            <th style="width: 60%;">عناصر الأداء والسلوك الوظيفي</th>
+                            <th>العلامة القصوى</th>
+                            <th>العلامة المتحققة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="underTrial-tbody">
+                        <tr data-item="leadership">
+                            <td>1</td>
+                            <td>لديه القدرة على التنظيم والتخطيط وتحديد أولويات العمل.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr data-item="planningGoals">
+                            <td>2</td>
+                            <td>يلتزم بتحقيق الأهداف والمهام الموكلة له ضمن الأطر الزمنية المحددة.</td>
+                            <td>8</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="8"></td>
+                        </tr>
+                        <tr data-item="achievingGoals">
+                            <td>3</td>
+                            <td>ينجز المهام والأهداف بالمستوى المطلوب كما ونوعاً.</td>
+                            <td>8</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="8"></td>
+                        </tr>
+                        <tr data-item="knowledgeAwareness">
+                            <td>4</td>
+                            <td>يطلع على آخر المستجدات والممارسات الفضلى في مجال العمل.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr data-item="serviceReceiverOrientation">
+                            <td>5</td>
+                            <td>يدرك مختلف فئات متلقي الخدمة ويعرف احتياجات ومتطلبات كل فئة من الفئات و يتعامل مع التغذية الراجعة وفقا للسياسات المتبعة.</td>
+                            <td>7</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="7"></td>
+                        </tr>
+                        <tr data-item="responsibility">
+                            <td>6</td>
+                            <td>لديه القدرة تحمل المسؤولية فيما يتعلق بكافة المهام والمسؤوليات وتحقيق الالتزامات وواجبات الوظيفة التي يشغلها.</td>
+                            <td>7</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="7"></td>
+                        </tr>
+                        <tr data-item="selfDevelopment">
+                            <td>7</td>
+                            <td>يهتم بأهداف الدائرة و رسالتها و يلتزم بقيمها.</td>
+                            <td>6</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="6"></td>
+                        </tr>
+                        <tr data-item="policyAdherence">
+                            <td>8</td>
+                            <td>يلتزم بتطبيق التشريعات و السياسات الناظمة للعمل.</td>
+                            <td>6</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="6"></td>
+                        </tr>
+                        <tr data-item="problemSolvingSkills">
+                            <td>9</td>
+                            <td>لديه القدرة على التعرف على مشاكل العمل و تحديدها بوضوح و جمع المعلومات ذات الصلة بالمشكلة و إقتراح حلول لها.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr data-item="continuousLearning">
+                            <td>10</td>
+                            <td>يظهر إستعداداً للإستفادة من جميع فرص التعلم المتاحة و المبادرات التدريبية المقدمة لتعزيز أداءه و تحسين قدراته لتلبية متطلبات العمل و المهام المطلوبة منه.</td>
+                            <td>4</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="4"></td>
+                        </tr>
+                        <tr data-item="technologyUsage">
+                            <td>11</td>
+                            <td>يستخدم التقنيات و الوسائل الحديثة في مجال العمل و يتعامل مع التحديات البسيطة عند استخدامها.</td>
+                            <td>4</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="4"></td>
+                        </tr>
+                        <tr data-item="skillDevelopment">
+                            <td>12</td>
+                            <td>يبدي اهتماماً مسيطراً بتطوير الذات و اكتساب المعرفة و تطوير المهارات الضرورية لمجال عمله.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr data-item="communicationSkills">
+                            <td>13</td>
+                            <td>لديه القدرة على التواصل وإيصال الأفكار بوضوح و صفاء الجيد.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr data-item="teamwork">
+                            <td>14</td>
+                            <td>يعمل بفاعلية ضمن فريق العمل و يحترم وجهات نظر الآخرين ويتقبل التنوع والاختلاف.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr data-item="initiativeInnovation">
+                            <td>15</td>
+                            <td>لديه القدرة على طرح أفكار وحلول إبداعية وتوظيفها في تطوير العمل.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr data-item="informationSecurity">
+                            <td>16</td>
+                            <td>يلتزم بسرية المعلومات والقوانين والأنظمة الخاصة بالعمل.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr data-item="assetProtection">
+                            <td>17</td>
+                            <td>يحافظ على المعدات والأجهزة الخاصة بالعمل.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr data-item="adherenceToWorkingHours">
+                            <td>18</td>
+                            <td>يلتزم بأوقات الدوام الرسمي المقررة ويستثمرها لإنجاز المطلوب منه.</td>
+                            <td>5</td>
+                            <td><input type="text" class="achieved-mark-underTrial numeric-input centered-input required-input" oninput="validateAndCalculateUnderTrialTab(this)" min="0" max="5"></td>
+                        </tr>
+                        <tr class="total-row">
+                            <th colspan="2" style="text-align: right;">المجموع</th>
+                            <td><input type="text" value="100" class="total-value-input numeric-input centered-input" readonly></td>
+                            <td><input type="text" id="totalAchievedUnderTrial" class="total-value-input numeric-input centered-input" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="underTrial-error-message" class="error-message" style="display: none;"></div>
+                <div class="final-grade-section">
+                    <label>* التقدير العام</label>
+                    <input type="text" id="overallGradeUnderTrial" class="numeric-input" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            
+            const savedEvaluationType = sessionStorage.getItem('selectedEvaluationType');
+            if (savedEvaluationType) {
+                document.getElementById('evaluationType').value = savedEvaluationType;
+                sessionStorage.removeItem('selectedEvaluationType');
+            }
+            
+            showEvaluationForms();
+
+            document.querySelectorAll('#tab1 .evaluation-table input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', calculateAllTab1);
+            });
+            
+            document.querySelectorAll('#tab1 .evaluation-table .achieved-ratio').forEach(input => {
+                input.addEventListener('input', function() { validateAndCorrectCompetencyInput(this); });
+                input.addEventListener('change', function() { validateAndCorrectCompetencyInput(this); });
+            });
+
+            document.querySelectorAll('#tab2 .evaluation-table input').forEach(input => {
+                input.addEventListener('input', calculateAllTab2);
+                input.addEventListener('change', calculateAllTab2);
+            });
+
+            document.getElementById('numResults').addEventListener('change', generateTab3Rows);
+
+            document.querySelectorAll('#underTrialTab .evaluation-table input[type="text"]').forEach(input => {
+                input.addEventListener('input', () => validateAndCalculateUnderTrialTab(input));
+                input.addEventListener('change', () => validateAndCalculateUnderTrialTab(input));
+            });
+            
+            document.querySelectorAll('#supportServicesTab1 .evaluation-table input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', calculateAllSupportServicesTab1);
+            });
+            
+            document.querySelectorAll('#supportServicesTab1 .evaluation-table .achieved-ratio-aux').forEach(input => {
+                input.addEventListener('input', function() { validateAndCorrectCompetencyInput(this); });
+                input.addEventListener('change', function() { validateAndCorrectCompetencyInput(this); });
+            });
+
+            document.querySelectorAll('#supportServicesTab2 .evaluation-table input').forEach(input => {
+                input.addEventListener('input', calculateAllSupportServicesTab2);
+                input.addEventListener('change', calculateAllSupportServicesTab2);
+            });
+
+            document.getElementById('numResultsAux').addEventListener('change', generateSupportServicesTabRows);
+            
+            document.querySelectorAll('#middleManagementTab .importance-input').forEach(input => {
+                input.addEventListener('input', calculateMiddleManagement);
+                input.addEventListener('change', calculateMiddleManagement);
+            });
+            
+            document.querySelectorAll('#middleManagementTab .achieved-input').forEach(input => {
+                input.addEventListener('input', function() { validateAndCorrectCompetencyInput(this); });
+                input.addEventListener('change', function() { validateAndCorrectCompetencyInput(this); });
+            });
+            
+            /* === تم الإصلاح هنا لتوافق آيفون / سفاري: عدم الاعتماد على window.event العام === */
+            document.querySelectorAll('.numeric-input').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    validateNumericInput(this);
+                });
+                
+                input.addEventListener('keydown', function(e) {
+                    if ([8, 9, 13, 27, 46].indexOf(e.keyCode) !== -1 ||
+                        [37, 38, 39, 40].indexOf(e.keyCode) !== -1 ||
+                        (e.ctrlKey && [65, 67, 86, 88].indexOf(e.keyCode) !== -1)) {
+                        return;
+                    }
+                    
+                    if (!/^[0-9.-]$/.test(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+                
+                input.addEventListener('paste', function(e) {
+                    const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+                    if (!/^[0-9.-]*$/.test(pastedData)) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+        
+        function checkAuthentication() {
+            const employeeId = sessionStorage.getItem('employeeId');
+            const employeeName = sessionStorage.getItem('employeeName');
+            
+            if (!employeeId || !employeeName) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            document.getElementById('userName').textContent = 'مرحباً بك: ' + employeeName;
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('employeeId');
+            sessionStorage.removeItem('employeeName');
+            window.location.href = 'login.html';
+        }
+        
+        function formatOutputValue(value, decimalPlaces = 2) {
+            if (isNaN(value) || value === null) {
+                return '';
+            }
+            if (value % 1 === 0) {
+                return value.toFixed(0);
+            }
+            return value.toFixed(decimalPlaces);
+        }
+
+        function getEvaluationWeights() {
+            const evaluationType = document.getElementById('evaluationType').value;
+            let weights = {
+                tab1Weight: 0.20,
+                tab3MaxScoreSum: 65,
+                tab2MaxScoreSum: 15,
+                tab1Divisor: 20
+            };
+
+            if (evaluationType === 'supportServices') {
+                weights.tab1Weight = 0.30;
+                weights.tab3MaxScoreSum = 55;
+                weights.tab2MaxScoreSum = 15;
+                weights.tab1Divisor = 20; // تصحيح الخطأ هنا
+            } else if (evaluationType === 'middle') {
+                weights.tab1Weight = 0.10;
+                weights.tab3MaxScoreSum = 70;
+                weights.tab2MaxScoreSum = 20;
+                weights.tab1Divisor = 10; // تصحيح الخطأ هنا
+            } else if (evaluationType === 'auxiliaryServices') {
+                weights.tab1Weight = 0.60;
+                tab3MaxScoreSum = 30;
+                weights.tab2MaxScoreSum = 10;
+                weights.tab1Divisor = 20; // تصحيح الخطأ هنا
+            }
+            return weights;
+        }
+
+        let tab3RowsGenerated = false;
+        let supportServicesTabRowsGenerated = false;
+
+        function handleEvaluationTypeChange() {
+            const evaluationType = document.getElementById('evaluationType').value;
+            
+            if (evaluationType !== "") {
+                sessionStorage.setItem('selectedEvaluationType', evaluationType);
+                location.reload();
+            }
+        }
+
+        function showEvaluationForms() {
+            const evaluationType = document.getElementById('evaluationType').value;
+            const evaluationFormsDiv = document.getElementById('evaluationForms');
+            const underTrialTabContent = document.getElementById('underTrialTab');
+
+            evaluationFormsDiv.style.display = 'none';
+            underTrialTabContent.style.display = 'none';
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+
+            if (evaluationType) {
+                evaluationFormsDiv.style.display = 'block';
+
+                updateTitles(evaluationType);
+
+                if (evaluationType === 'underTrial') {
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        if (tab.id === 'underTrialTab') {
+                            tab.style.display = 'block';
+                        } else {
+                            tab.style.display = 'none';
+                        }
+                    });
+                    calculateUnderTrialTab();
+                } else if (evaluationType === 'auxiliaryServices') {
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        if (tab.id.startsWith('supportServicesTab')) {
+                            tab.style.display = 'block';
+                        } else {
+                            tab.style.display = 'none';
+                        }
+                    });
+
+                    if (!supportServicesTabRowsGenerated) {
+                        generateSupportServicesTabRows();
+                        supportServicesTabRowsGenerated = true;
+                    }
+                    calculateAllSupportServicesTab();
+                    calculateAllSupportServicesTab1();
+                    calculateAllSupportServicesTab2();
+                    updateSupportServicesTab4Summary();
+                } else if (evaluationType === 'middle') {
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        if (tab.id === 'tab3' || tab.id === 'tab2' || tab.id === 'tab4' || tab.id === 'middleManagementTab') {
+                            tab.style.display = 'block';
+                        } else {
+                            tab.style.display = 'none';
+                        }
+                    });
+
+                    if (!tab3RowsGenerated) {
+                        generateTab3Rows();
+                        tab3RowsGenerated = true;
+                    }
+                    calculateAllTab3();
+                    calculateMiddleManagement();
+                    calculateAllTab2();
+                    updateTab4Summary();
+                } else if (evaluationType === 'supportServices') {
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        if (tab.id === 'tab1' || tab.id === 'tab2' || tab.id === 'tab3' || tab.id === 'tab4') {
+                            tab.style.display = 'block';
+                        } else {
+                            tab.style.display = 'none';
+                        }
+                    });
+
+                    if (!tab3RowsGenerated) {
+                        generateTab3Rows();
+                        tab3RowsGenerated = true;
+                    }
+                    calculateAllTab3();
+                    calculateAllTab1();
+                    calculateAllTab2();
+                    updateTab4Summary();
+                } else if (evaluationType === 'specialized') {
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        if (tab.id === 'tab1' || tab.id === 'tab2' || tab.id === 'tab3' || tab.id === 'tab4') {
+                            tab.style.display = 'block';
+                        } else {
+                            tab.style.display = 'none';
+                        }
+                    });
+
+                    if (!tab3RowsGenerated) {
+                        generateTab3Rows();
+                        tab3RowsGenerated = true;
+                    }
+                    calculateAllTab3();
+                    calculateAllTab1();
+                    calculateAllTab2();
+                    updateTab4Summary();
+                }
+            }
+        }
+
+        function updateTitles(evaluationType) {
+            if (evaluationType === 'specialized') {
+                document.getElementById('tab3-title').textContent = 'مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها (65%)';
+                document.getElementById('tab1-title').textContent = 'الكفايات ويخصص له ما نسبته (20%) من تقييم الأداء';
+                document.getElementById('tab2-title').textContent = 'مجموع النسبة المستحقة لعناصر التميز الوظيفي (15)';
+                
+                document.getElementById('summary-tab3-title').textContent = 'أ- مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها (65%)';
+                document.getElementById('summary-tab1-title').textContent = 'ب- الكفايات ويخصص له ما نسبته (20%) من تقييم الأداء';
+                document.getElementById('summary-tab2-title').textContent = 'ج- مجموع النسبة المستحقة لعناصر التميز الوظيفي (15)';
+            } 
+            else if (evaluationType === 'supportServices') {
+                document.getElementById('tab3-title').textContent = 'مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها (55%)';
+                document.getElementById('tab1-title').textContent = 'الكفايات ويخصص له ما نسبته (30%) من تقييم الأداء';
+                document.getElementById('tab2-title').textContent = 'مجموع النسبة المستحقة لعناصر التميز الوظيفي (15)';
+                
+                document.getElementById('summary-tab3-title').textContent = 'أ- مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها (55%)';
+                document.getElementById('summary-tab1-title').textContent = 'ب- الكفايات ويخصص له ما نسبته (30%) من تقييم الأداء';
+                document.getElementById('summary-tab2-title').textContent = 'ج- مجموع النسبة المستحقة لعناصر التميز الوظيفي (15)';
+            }
+            else if (evaluationType === 'auxiliaryServices') {
+                document.getElementById('supportServicesTab-title').textContent = 'مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها (30%)';
+                document.getElementById('supportServicesTab1-title').textContent = 'الكفايات ويخصص له ما نسبته (60%) من تقييم الأداء';
+                document.getElementById('supportServicesTab2-title').textContent = 'مجموع النسبة المستحقة لعناصر التميز الوظيفي (10)';
+                
+                document.getElementById('summary-supportServicesTab-title').textContent = 'أ- مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها (30%)';
+                document.getElementById('summary-supportServicesTab1-title').textContent = 'ب- الكفايات ويخصص له ما نسبته (60%) من تقييم الأداء';
+                document.getElementById('summary-supportServicesTab2-title').textContent = 'ج- مجموع النسبة المستحقة لعناصر التميز الوظيفي (10)';
+            }
+            else if (evaluationType === 'middle') {
+                document.getElementById('tab3-title').textContent = 'مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها (70%)';
+                document.getElementById('middleManagementTab-title').textContent = 'الكفايات ويخصص له ما نسبته (10%) من تقييم الأداء';
+                document.getElementById('tab2-title').textContent = 'مجموع النسبة المستحقة لعناصر التميز الوظيفي (20)';
+                
+                document.getElementById('summary-tab3-title').textContent = 'أ- مجموع العلامة المستحقة للنتائج المطلوب من الموظف تحقيقها (70%)';
+                document.getElementById('summary-tab1-title').textContent = 'ب- الكفايات ويخصص له ما نسبته (10%) من تقييم الأداء';
+                document.getElementById('summary-tab2-title').textContent = 'ج- مجموع النسبة المستحقة لعناصر التميز الوظيفي (20)';
+            }
+        }
+
+        function validateAndCorrectCompetencyInput(inputElement) {
+            let value = parseFloat(inputElement.value);
+            const errorMessageDiv = inputElement.closest('.tab-content').querySelector('.error-message');
+            
+            inputElement.style.borderColor = '';
+            inputElement.classList.remove('required-input');
+            if(errorMessageDiv) {
+                errorMessageDiv.style.display = 'none';
+            }
+
+            if (isNaN(value)) {
+                inputElement.value = '';
+                return;
+            }
+            
+            if (value < 0) {
+                value = 0;
+                inputElement.value = '0';
+            } else if (value > 95) {
+                value = 95;
+                inputElement.value = '95';
+            }
+            
+            const parentTab = inputElement.closest('.tab-content');
+            if (parentTab) {
+                switch (parentTab.id) {
+                    case 'tab1':
+                        calculateAllTab1();
+                        break;
+                    case 'supportServicesTab1':
+                        calculateAllSupportServicesTab1();
+                        break;
+                    case 'middleManagementTab':
+                        calculateMiddleManagement();
+                        break;
+                }
+            }
+        }
+
+        function calculateMiddleManagement() {
+            let totalScore = 0;
+            const competencyRows = document.querySelectorAll('#middleManagement-tbody tr[data-competency]');
+            const errorMessageDiv = document.getElementById('middleManagement-error-message');
+            errorMessageDiv.style.display = 'none';
+
+            let hasError = false;
+            let hasEmptyField = false;
+            let hasImportanceError = false;
+            let totalImportance = 0;
+            
+            competencyRows.forEach(row => {
+                const importanceInput = row.querySelector('.importance-input');
+                const achievedInput = row.querySelector('.achieved-input');
+                const scoreInput = row.querySelector('.score-input');
+
+                let importance = parseFloat(importanceInput.value) || 0;
+                let achieved = parseFloat(achievedInput.value) || 0;
+
+                importanceInput.style.borderColor = '';
+                achievedInput.style.borderColor = '';
+
+                if (importanceInput.value === '' || importanceInput.value === null) {
+                    importanceInput.classList.add('required-input');
+                    hasEmptyField = true;
+                    importance = 0;
+                } 
+                else if (isNaN(importance) || importance < 0 || importance > 100) {
+                    importanceInput.classList.add('required-input');
+                    if (!hasError) {
+                        errorMessageDiv.textContent = 'الرجاء إدخال نسبة مئوية صحيحة بين 0 و 100 في حقل الأهمية النسبية.';
+                        errorMessageDiv.style.display = 'block';
+                        hasError = true;
+                    }
+                    importance = 0;
+                } else {
+                    importanceInput.classList.remove('required-input');
+                    totalImportance += importance;
+                }
+
+                if (achievedInput.value === '' || achievedInput.value === null) {
+                    achievedInput.classList.add('required-input');
+                    hasEmptyField = true;
+                    achieved = 0;
+                } else {
+                    achievedInput.classList.remove('required-input');
+                }
+
+                let calculatedScore = (importance * achieved) / 100;
+                scoreInput.value = formatOutputValue(calculatedScore);
+
+                totalScore += calculatedScore;
+            });
+
+            if (totalImportance !== 100) {
+                if (!hasImportanceError) {
+                    errorMessageDiv.textContent = 'خطأ: مجموع الأهمية النسبية يجب أن يكون بالضبط 100%. الرجاء تعديل القيم.';
+                    errorMessageDiv.style.display = 'block';
+                    hasImportanceError = true;
+                }
+                competencyRows.forEach(row => {
+                    row.querySelector('.importance-input').style.borderColor = 'red';
+                });
+            }
+
+            if (hasEmptyField && !hasError && !hasImportanceError) {
+                errorMessageDiv.textContent = 'الرجاء إدخال قيمة في جميع الحقول المطلوبة.';
+                errorMessageDiv.style.display = 'block';
+            }
+
+            document.getElementById('totalMiddleManagementScore').value = formatOutputValue(totalScore);
+
+            let finalEvaluation = totalScore * 0.1;
+            document.getElementById('finalMiddleManagementEvaluation').value = formatOutputValue(finalEvaluation);
+
+            updateTab4Summary();
+        }
+
+        function calculateAllTab1() {
+            const evaluationType = document.getElementById('evaluationType').value;
+            let totalActualLevel = 0;
+            let totalDesiredCompetencySum = 0;
+
+            const competencyRows = document.querySelectorAll('#tab1 .evaluation-table tbody tr[data-competency]');
+            const errorMessageDiv = document.getElementById('tab1-error-message');
+            errorMessageDiv.style.display = 'none';
+
+            let hasError = false;
+            let hasEmptyField = false;
+            
+            competencyRows.forEach(row => {
+                const selectedScoreRadio = row.querySelector('input[type="radio"]:checked');
+                const achievedRatioInput = row.querySelector('.achieved-ratio');
+                const actualLevelInput = row.querySelector('.actual-level');
+
+                let desiredCompetencyScore = selectedScoreRadio ? parseFloat(selectedScoreRadio.value) : 0;
+                let achievedRatio = parseFloat(achievedRatioInput.value) || 0;
+
+                Array.from(row.querySelectorAll('input[type="radio"]')).forEach(radio => radio.closest('td').style.border = '');
+
+                if (!selectedScoreRadio) {
+                    Array.from(row.querySelectorAll('input[type="radio"]')).forEach(radio => radio.closest('td').style.border = '1px solid red');
+                    if (!hasError) {
+                        errorMessageDiv.textContent = 'الرجاء تحديد مستوى الكفاءة المطلوبة لكل بند.';
+                        errorMessageDiv.style.display = 'block';
+                        hasError = true;
+                    }
+                    desiredCompetencyScore = 0;
+                }
+
+                if (achievedRatioInput.value === '' || achievedRatioInput.value === null) {
+                    achievedRatioInput.classList.add('required-input');
+                    hasEmptyField = true;
+                    achievedRatio = 0;
+                } else {
+                    achievedRatioInput.classList.remove('required-input');
+                }
+
+                let calculatedActualLevel = (achievedRatio / 100) * desiredCompetencyScore;
+                actualLevelInput.value = formatOutputValue(calculatedActualLevel);
+
+                totalActualLevel += calculatedActualLevel;
+                totalDesiredCompetencySum += desiredCompetencyScore;
+            });
+
+            if (hasEmptyField && !hasError) {
+                errorMessageDiv.textContent = 'الرجاء إدخال قيمة في جميع حقول النسبة المحققة من الكفاية.';
+                errorMessageDiv.style.display = 'block';
+            }
+
+            document.getElementById('totalDesiredCompetency').value = formatOutputValue(totalDesiredCompetencySum);
+            document.getElementById('totalActualLevel').value = formatOutputValue(totalActualLevel);
+
+            let finalEvaluation = 0;
+            if (totalDesiredCompetencySum > 0) {
+                if (evaluationType === 'middle') {
+                    finalEvaluation = (totalActualLevel / totalDesiredCompetencySum) * 10;
+                } else if (evaluationType === 'supportServices') {
+                    finalEvaluation = (totalActualLevel / totalDesiredCompetencySum) * 30;
+                } else {
+                    finalEvaluation = (totalActualLevel / totalDesiredCompetencySum) * 20;
+                }
+            }
+            document.getElementById('finalEvaluation').value = formatOutputValue(finalEvaluation);
+
+            updateTab4Summary();
+        }
+
+        function calculateAllSupportServicesTab1() {
+            let totalActualLevel = 0;
+            let totalDesiredCompetencySum = 0;
+
+            const competencyRows = document.querySelectorAll('#supportServicesTab1 .evaluation-table tbody tr[data-competency]');
+            const errorMessageDiv = document.getElementById('supportServicesTab1-error-message');
+            errorMessageDiv.style.display = 'none';
+
+            let hasError = false;
+            let hasEmptyField = false;
+            
+            competencyRows.forEach(row => {
+                const selectedScoreRadio = row.querySelector('input[type="radio"]:checked');
+                const achievedRatioInput = row.querySelector('.achieved-ratio-aux');
+                const actualLevelInput = row.querySelector('.actual-level-aux');
+
+                let desiredCompetencyScore = selectedScoreRadio ? parseFloat(selectedScoreRadio.value) : 0;
+                let achievedRatio = parseFloat(achievedRatioInput.value) || 0;
+
+                Array.from(row.querySelectorAll('input[type="radio"]')).forEach(radio => radio.closest('td').style.border = '');
+
+                if (!selectedScoreRadio) {
+                    Array.from(row.querySelectorAll('input[type="radio"]')).forEach(radio => radio.closest('td').style.border = '1px solid red');
+                    if (!hasError) {
+                        errorMessageDiv.textContent = 'الرجاء تحديد مستوى الكفاءة المطلوبة لكل بند.';
+                        errorMessageDiv.style.display = 'block';
+                        hasError = true;
+                    }
+                    desiredCompetencyScore = 0;
+                }
+
+                if (achievedRatioInput.value === '' || achievedRatioInput.value === null) {
+                    achievedRatioInput.classList.add('required-input');
+                    hasEmptyField = true;
+                    achievedRatio = 0;
+                } else {
+                    achievedRatioInput.classList.remove('required-input');
+                }
+
+                let calculatedActualLevel = (achievedRatio / 100) * desiredCompetencyScore;
+                actualLevelInput.value = formatOutputValue(calculatedActualLevel);
+
+                totalActualLevel += calculatedActualLevel;
+                totalDesiredCompetencySum += desiredCompetencyScore;
+            });
+
+            if (hasEmptyField && !hasError) {
+                errorMessageDiv.textContent = 'الرجاء إدخال قيمة في جميع حقول النسبة المحققة من الكفاية.';
+                errorMessageDiv.style.display = 'block';
+            }
+
+            document.getElementById('totalDesiredCompetencyAux').value = formatOutputValue(totalDesiredCompetencySum);
+            document.getElementById('totalActualLevelAux').value = formatOutputValue(totalActualLevel);
+
+            let finalEvaluation = 0;
+            if (totalDesiredCompetencySum > 0) {
+                finalEvaluation = (totalActualLevel / totalDesiredCompetencySum) * 60;
+            }
+            document.getElementById('finalEvaluationAux').value = formatOutputValue(finalEvaluation);
+
+            updateSupportServicesTab4Summary();
+        }
+
+        function calculateAllTab2() {
+            const weights = getEvaluationWeights();
+            let totalDeservedPercentage = 0;
+            let totalMaxScoreSumTab2 = 0;
+            const tab2Rows = document.querySelectorAll('#tab2 .evaluation-table tbody tr[data-item]');
+            const errorMessageDiv = document.getElementById('tab2-error-message');
+            errorMessageDiv.style.display = 'none';
+            let hasInputError = false;
+            let hasTotalSumError = false;
+
+            tab2Rows.forEach(row => {
+                const maxScoreInput = row.querySelector('.max-score-input');
+                const deservedPercentageInput = row.querySelector('.deserved-percentage');
+
+                let maxScore = parseFloat(maxScoreInput.value) || 0;
+                let deserved = parseFloat(deservedPercentageInput.value) || 0;
+
+                maxScoreInput.style.borderColor = '';
+                deservedPercentageInput.style.borderColor = '';
+
+                if (isNaN(maxScore) || maxScore < 0) {
+                    maxScoreInput.style.borderColor = 'red';
+                    hasInputError = true;
+                    maxScore = 0;
+                } else if (maxScoreInput.value === '') {
+                    maxScoreInput.classList.add('required-input');
+                } else {
+                    maxScoreInput.classList.remove('required-input');
+                }
+
+                if (isNaN(deserved) || deserved < 0) {
+                    deservedPercentageInput.style.borderColor = 'red';
+                    hasInputError = true;
+                    deserved = 0;
+                } else if (deservedPercentageInput.value === '') {
+                    deservedPercentageInput.classList.add('required-input');
+                } else {
+                    deservedPercentageInput.classList.remove('required-input');
+                }
+
+                if (deserved > maxScore && !isNaN(maxScore) && maxScore >= 0) {
+                    deservedPercentageInput.style.borderColor = 'red';
+                    if (!hasInputError) {
+                        errorMessageDiv.textContent = 'خطأ: قيمة "النسبة المستحقة" لا يمكن أن تتجاوز "الأهمية النسبية" في نفس الصف.';
+                        errorMessageDiv.style.display = 'block';
+                    }
+                    deserved = maxScore;
+                    deservedPercentageInput.value = formatOutputValue(deserved);
+                }
+
+                totalMaxScoreSumTab2 += maxScore;
+                totalDeservedPercentage += deserved;
+            });
+
+            if (evaluationType === 'middle') {
+                if (totalMaxScoreSumTab2 !== weights.tab2MaxScoreSum) {
+                    tab2Rows.forEach(row => {
+                        row.querySelector('.max-score-input').style.borderColor = 'red';
+                    });
+                    errorMessageDiv.textContent = `خطأ: مجموع "الأهمية النسبية" يجب أن يكون بالضبط ${weights.tab2MaxScoreSum} للوظائف الوسطى.`;
+                    errorMessageDiv.style.display = 'block';
+                    hasTotalSumError = true;
+                }
+            } else {
+                if (totalMaxScoreSumTab2 !== weights.tab2MaxScoreSum) {
+                    tab2Rows.forEach(row => {
+                        row.querySelector('.max-score-input').style.borderColor = 'red';
+                    });
+                    errorMessageDiv.textContent = `خطأ: مجموع "الأهمية النسبية" يجب أن يكون بالضبط ${weights.tab2MaxScoreSum}.`;
+                    errorMessageDiv.style.display = 'block';
+                    hasTotalSumError = true;
+                }
+            }
+
+            if (hasInputError || hasTotalSumError) {
+                if (hasTotalSumError) {
+                    errorMessageDiv.textContent = `خطأ: مجموع "الأهمية النسبية" يجب أن يكون بالضبط ${weights.tab2MaxScoreSum}.`;
+                } else if (hasInputError) {
+                    errorMessageDiv.textContent = 'الرجاء إدخال أرقام صحيحة وغير سالبة في جميع الحقول الملونة بالأحمر.';
+                }
+                errorMessageDiv.style.display = 'block';
+            } else {
+                errorMessageDiv.style.display = 'none';
+            }
+            document.getElementById('totalDeservedPercentage').value = formatOutputValue(totalDeservedPercentage);
+
+            if (!hasInputError && !hasTotalSumError && totalDeservedPercentage > weights.tab2MaxScoreSum) {
+                errorMessageDiv.textContent = `خطأ: مجموع النسبة المستحقة تجاوز ${weights.tab2MaxScoreSum}%. الرجاء التعديل.`;
+                errorMessageDiv.style.display = 'block';
+                document.getElementById('totalDeservedPercentage').style.borderColor = 'red';
+            } else if (!hasInputError && !hasTotalSumError) {
+                errorMessageDiv.style.display = 'none';
+                document.getElementById('totalDeservedPercentage').style.borderColor = '';
+            }
+            updateTab4Summary();
+        }
+
+        function calculateAllSupportServicesTab2() {
+            const weights = getEvaluationWeights();
+            let totalDeservedPercentage = 0;
+            let totalMaxScoreSumTab2 = 0;
+            const tab2Rows = document.querySelectorAll('#supportServicesTab2 .evaluation-table tbody tr[data-item]');
+            const errorMessageDiv = document.getElementById('supportServicesTab2-error-message');
+            errorMessageDiv.style.display = 'none';
+            let hasInputError = false;
+            let hasTotalSumError = false;
+
+            tab2Rows.forEach(row => {
+                const maxScoreInput = row.querySelector('.max-score-input-aux');
+                const deservedPercentageInput = row.querySelector('.deserved-percentage-aux');
+
+                let maxScore = parseFloat(maxScoreInput.value) || 0;
+                let deserved = parseFloat(deservedPercentageInput.value) || 0;
+
+                maxScoreInput.style.borderColor = '';
+                deservedPercentageInput.style.borderColor = '';
+
+                if (isNaN(maxScore) || maxScore < 0) {
+                    maxScoreInput.style.borderColor = 'red';
+                    hasInputError = true;
+                    maxScore = 0;
+                } else if (maxScoreInput.value === '') {
+                    maxScoreInput.classList.add('required-input');
+                } else {
+                    maxScoreInput.classList.remove('required-input');
+                }
+
+                if (isNaN(deserved) || deserved < 0) {
+                    deservedPercentageInput.style.borderColor = 'red';
+                    hasInputError = true;
+                    deserved = 0;
+                } else if (deservedPercentageInput.value === '') {
+                    deservedPercentageInput.classList.add('required-input');
+                } else {
+                    deservedPercentageInput.classList.remove('required-input');
+                }
+
+                if (deserved > maxScore && !isNaN(maxScore) && maxScore >= 0) {
+                    deservedPercentageInput.style.borderColor = 'red';
+                    if (!hasInputError) {
+                        errorMessageDiv.textContent = 'خطأ: قيمة "النسبة المستحقة" لا يمكن أن تتجاوز "الأهمية النسبية" في نفس الصف.';
+                        errorMessageDiv.style.display = 'block';
+                    }
+                    deserved = maxScore;
+                    deservedPercentageInput.value = formatOutputValue(deserved);
+                }
+
+                totalMaxScoreSumTab2 += maxScore;
+                totalDeservedPercentage += deserved;
+            });
+
+            if (totalMaxScoreSumTab2 !== weights.tab2MaxScoreSum) {
+                tab2Rows.forEach(row => {
+                    row.querySelector('.max-score-input-aux').style.borderColor = 'red';
+                });
+                errorMessageDiv.textContent = `خطأ: مجموع "الأهمية النسبية" يجب أن يكون بالضبط ${weights.tab2MaxScoreSum}.`;
+                errorMessageDiv.style.display = 'block';
+                hasTotalSumError = true;
+            }
+
+            if (hasInputError || hasTotalSumError) {
+                if (hasTotalSumError) {
+                    errorMessageDiv.textContent = `خطأ: مجموع "الأهمية النسبية" يجب أن يكون بالضبط ${weights.tab2MaxScoreSum}.`;
+                } else if (hasInputError) {
+                    errorMessageDiv.textContent = 'الرجاء إدخال أرقام صحيحة وغير سالبة في جميع الحقول الملونة بالأحمر.';
+                }
+                errorMessageDiv.style.display = 'block';
+            } else {
+                errorMessageDiv.style.display = 'none';
+            }
+            document.getElementById('totalDeservedPercentageAux').value = formatOutputValue(totalDeservedPercentage);
+
+            if (!hasInputError && !hasTotalSumError && totalDeservedPercentage > weights.tab2MaxScoreSum) {
+                errorMessageDiv.textContent = `خطأ: مجموع النسبة المستحقة تجاوز ${weights.tab2MaxScoreSum}%. الرجاء التعديل.`;
+                errorMessageDiv.style.display = 'block';
+                document.getElementById('totalDeservedPercentageAux').style.borderColor = 'red';
+            } else if (!hasInputError && !hasTotalSumError) {
+                errorMessageDiv.style.display = 'none';
+                document.getElementById('totalDeservedPercentageAux').style.borderColor = '';
+            }
+            updateSupportServicesTab4Summary();
+        }
+
+        function generateTab3Rows() {
+            const numResultsInput = document.getElementById('numResults');
+            let numResults = parseInt(numResultsInput.value);
+            const tbody = document.getElementById('tab3-tbody');
+            const evaluationType = document.getElementById('evaluationType').value;
+            const weights = getEvaluationWeights();
+
+            const currentValues = [];
+            document.querySelectorAll('#tab3-tbody tr[data-item]').forEach(row => {
+                const index = parseInt(row.querySelector('td:first-child').textContent);
+                const resultText = row.querySelector('td:nth-child(2) input').value;
+                const maxScore = row.querySelector('.max-score-tab3').value;
+                const achievedPercent = row.querySelector('.achieved-percent-tab3').value;
+                currentValues[index - 1] = { resultText, maxScore, achievedPercent };
+            });
+
+            tbody.innerHTML = '';
+
+            if (isNaN(numResults) || numResults < 2) {
+                numResults = 2;
+                numResultsInput.value = 2;
+            } else if (numResults > 5) {
+                numResults = 5;
+                numResultsInput.value = 5;
+            }
+
+            for (let i = 1; i <= numResults; i++) {
+                const row = document.createElement('tr');
+                row.setAttribute('data-item', `result${i}`);
+                const savedValues = currentValues[i - 1] || { resultText: '', maxScore: '', achievedPercent: '' };
+                
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td style="text-align: right;"><input type="text" value="${savedValues.resultText || 'يتم  إدراجها من الوصف الوظيفي للموظف'}" placeholder="النتائج المطلوب تحقيقها" style="width: 100%; text-align: right;" readonly></td>
+                    <td><input type="text" class="max-score-tab3 numeric-input centered-input required-input" value="${savedValues.maxScore}" oninput="calculateAllTab3()" min="0" max="${weights.tab3MaxScoreSum}"></td>
+                    <td class="achieved-percent-cell"><input type="text" class="achieved-percent-tab3 numeric-input required-input" value="${savedValues.achievedPercent}" oninput="calculateAllTab3()" min="0" max="100"></td>
+                    <td><input type="text" class="deserved-mark-tab3 numeric-input" readonly></td>
+                `;
+                tbody.appendChild(row);
+            }
+
+            const totalRow = document.createElement('tr');
+            totalRow.classList.add('total-row');
+            totalRow.innerHTML = `
+                <th colspan="4" style="text-align: right;">مجموع العلامات المستحقة</th>
+                <td><input type="text" id="totalDeservedMarkTab3" class="total-value-input numeric-input" readonly></td>
+            `;
+            tbody.appendChild(totalRow);
+
+            document.querySelectorAll('#tab3 .evaluation-table input').forEach(input => {
+                input.addEventListener('input', calculateAllTab3);
+                input.addEventListener('change', calculateAllTab3);
+            });
+            calculateAllTab3();
+        }
+
+        function generateSupportServicesTabRows() {
+            const numResultsInput = document.getElementById('numResultsAux');
+            let numResults = parseInt(numResultsInput.value);
+            const tbody = document.getElementById('supportServicesTab-tbody');
+            const weights = getEvaluationWeights();
+
+            const currentValues = [];
+            document.querySelectorAll('#supportServicesTab-tbody tr[data-item]').forEach(row => {
+                const index = parseInt(row.querySelector('td:first-child').textContent);
+                const resultText = row.querySelector('td:nth-child(2) input').value;
+                const maxScore = row.querySelector('.max-score-aux').value;
+                const achievedPercent = row.querySelector('.achieved-percent-aux').value;
+                currentValues[index - 1] = { resultText, maxScore, achievedPercent };
+            });
+
+            tbody.innerHTML = '';
+
+            if (isNaN(numResults) || numResults < 2) {
+                numResults = 2;
+                numResultsInput.value = 2;
+            } else if (numResults > 5) {
+                numResults = 5;
+                numResultsInput.value = 5;
+            }
+
+            for (let i = 1; i <= numResults; i++) {
+                const row = document.createElement('tr');
+                row.setAttribute('data-item', `result${i}`);
+                const savedValues = currentValues[i - 1] || { resultText: '', maxScore: '', achievedPercent: '' };
+                
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td style="text-align: right;"><input type="text" value="${savedValues.resultText || 'يتم  إدراجها من الوصف الوظيفي للموظف'}" placeholder="النتائج المطلوب تحقيقها" style="width: 100%; text-align: right;" readonly></td>
+                    <td><input type="text" class="max-score-aux numeric-input centered-input required-input" value="${savedValues.maxScore}" oninput="calculateAllSupportServicesTab()" min="0" max="${weights.tab3MaxScoreSum}"></td>
+                    <td class="achieved-percent-cell"><input type="text" class="achieved-percent-aux numeric-input required-input" value="${savedValues.achievedPercent}" oninput="calculateAllSupportServicesTab()" min="0" max="100"></td>
+                    <td><input type="text" class="deserved-mark-aux numeric-input" readonly></td>
+                `;
+                tbody.appendChild(row);
+            }
+
+            const totalRow = document.createElement('tr');
+            totalRow.classList.add('total-row');
+            totalRow.innerHTML = `
+                <th colspan="4" style="text-align: right;">مجموع العلامات المستحقة</th>
+                <td><input type="text" id="totalDeservedMarkAux" class="total-value-input numeric-input" readonly></td>
+            `;
+            tbody.appendChild(totalRow);
+
+            document.querySelectorAll('#supportServicesTab .evaluation-table input').forEach(input => {
+                input.addEventListener('input', calculateAllSupportServicesTab);
+                input.addEventListener('change', calculateAllSupportServicesTab);
+            });
+            calculateAllSupportServicesTab();
+        }
+
+        function calculateAllTab3() {
+            const weights = getEvaluationWeights();
+            let totalDeservedMarkTab3 = 0;
+            let totalMaxScoreSum = 0;
+            const tab3Rows = document.querySelectorAll('#tab3 .evaluation-table tbody tr[data-item]');
+            const errorMessageDiv = document.getElementById('tab3-error-message');
+            errorMessageDiv.style.display = 'none';
+
+            let hasInputError = false;
+            let hasTotalError = false;
+
+            tab3Rows.forEach(row => {
+                const maxScoreInput = row.querySelector('.max-score-tab3');
+                const achievedPercentInput = row.querySelector('.achieved-percent-tab3');
+                const deservedMarkInput = row.querySelector('.deserved-mark-tab3');
+
+                if (!maxScoreInput || !achievedPercentInput || !deservedMarkInput) {
+                    return;
+                }
+
+                let maxScore = parseFloat(maxScoreInput.value) || 0;
+                let achievedPercent = parseFloat(achievedPercentInput.value) || 0;
+
+                maxScoreInput.style.borderColor = '';
+                achievedPercentInput.style.borderColor = '';
+
+                if (isNaN(maxScore) || maxScore < 0 || maxScore > weights.tab3MaxScoreSum) {
+                    maxScoreInput.style.borderColor = 'red';
+                    hasInputError = true;
+                    maxScore = 0;
+                } else if (maxScoreInput.value === '') {
+                    maxScoreInput.classList.add('required-input');
+                } else {
+                    maxScoreInput.classList.remove('required-input');
+                    totalMaxScoreSum += maxScore;
+                }
+
+                if (isNaN(achievedPercent) || achievedPercent < 0 || achievedPercent > 100) {
+                    achievedPercentInput.style.borderColor = 'red';
+                    hasInputError = true;
+                    achievedPercent = 0;
+                } else if (achievedPercentInput.value === '') {
+                    achievedPercentInput.classList.add('required-input');
+                } else {
+                    achievedPercentInput.classList.remove('required-input');
+                }
+
+                let deservedMark = (maxScore / 100) * achievedPercent;
+                deservedMarkInput.value = formatOutputValue(deservedMark);
+
+                totalDeservedMarkTab3 += isNaN(deservedMark) ? 0 : deservedMark;
+            });
+            document.getElementById('totalDeservedMarkTab3').value = formatOutputValue(totalDeservedMarkTab3);
+
+            if (hasInputError) {
+                errorMessageDiv.textContent = 'الرجاء إدخال أرقام صحيحة بين 0 و 100 في جميع الحقول الملونة بالأحمر.';
+                errorMessageDiv.style.display = 'block';
+            }
+
+            document.getElementById('totalDeservedMarkTab3').style.borderColor = '';
+            if (totalMaxScoreSum > weights.tab3MaxScoreSum) {
+                errorMessageDiv.textContent = `خطأ: مجموع الأهمية النسبية (العلامة القصوى) تجاوز ${weights.tab3MaxScoreSum}%. الرجاء التعديل.`;
+                errorMessageDiv.style.display = 'block';
+                document.getElementById('totalDeservedMarkTab3').style.borderColor = 'red';
+                hasTotalError = true;
+            } else if (totalMaxScoreSum < weights.tab3MaxScoreSum && !hasInputError) {
+                errorMessageDiv.textContent = `خطأ: مجموع الأهمية النسبية (العلامة القصوى) يجب أن يكون ${weights.tab3MaxScoreSum}%. الرجاء التعديل.`;
+                errorMessageDiv.style.display = 'block';
+                document.getElementById('totalDeservedMarkTab3').style.borderColor = 'red';
+                hasTotalError = true;
+            } else if (!hasInputError && !hasTotalError) {
+                errorMessageDiv.style.display = 'none';
+            }
+
+            updateTab4Summary();
+        }
+
+        function calculateAllSupportServicesTab() {
+            const weights = getEvaluationWeights();
+            let totalDeservedMarkTab = 0;
+            let totalMaxScoreSum = 0;
+            const tabRows = document.querySelectorAll('#supportServicesTab .evaluation-table tbody tr[data-item]');
+            const errorMessageDiv = document.getElementById('supportServicesTab-error-message');
+            errorMessageDiv.style.display = 'none';
+
+            let hasInputError = false;
+            let hasTotalError = false;
+
+            tabRows.forEach(row => {
+                const maxScoreInput = row.querySelector('.max-score-aux');
+                const achievedPercentInput = row.querySelector('.achieved-percent-aux');
+                const deservedMarkInput = row.querySelector('.deserved-mark-aux');
+
+                if (!maxScoreInput || !achievedPercentInput || !deservedMarkInput) {
+                    return;
+                }
+
+                let maxScore = parseFloat(maxScoreInput.value) || 0;
+                let achievedPercent = parseFloat(achievedPercentInput.value) || 0;
+
+                maxScoreInput.style.borderColor = '';
+                achievedPercentInput.style.borderColor = '';
+
+                if (isNaN(maxScore) || maxScore < 0 || maxScore > weights.tab3MaxScoreSum) {
+                    maxScoreInput.style.borderColor = 'red';
+                    hasInputError = true;
+                    maxScore = 0;
+                } else if (maxScoreInput.value === '') {
+                    maxScoreInput.classList.add('required-input');
+                } else {
+                    maxScoreInput.classList.remove('required-input');
+                    totalMaxScoreSum += maxScore;
+                }
+
+                if (isNaN(achievedPercent) || achievedPercent < 0 || achievedPercent > 100) {
+                    achievedPercentInput.style.borderColor = 'red';
+                    hasInputError = true;
+                    achievedPercent = 0;
+                } else if (achievedPercentInput.value === '') {
+                    achievedPercentInput.classList.add('required-input');
+                } else {
+                    achievedPercentInput.classList.remove('required-input');
+                }
+
+                let deservedMark = (maxScore / 100) * achievedPercent;
+                deservedMarkInput.value = formatOutputValue(deservedMark);
+
+                totalDeservedMarkTab += isNaN(deservedMark) ? 0 : deservedMark;
+            });
+            document.getElementById('totalDeservedMarkAux').value = formatOutputValue(totalDeservedMarkTab);
+
+            if (hasInputError) {
+                errorMessageDiv.textContent = 'الرجاء إدخال أرقام صحيحة بين 0 و 100 في جميع الحقول الملونة بالأحمر.';
+                errorMessageDiv.style.display = 'block';
+            }
+
+            document.getElementById('totalDeservedMarkAux').style.borderColor = '';
+            if (totalMaxScoreSum > weights.tab3MaxScoreSum) {
+                errorMessageDiv.textContent = `خطأ: مجموع الأهمية النسبية (العلامة القصوى) تجاوز ${weights.tab3MaxScoreSum}%. الرجاء التعديل.`;
+                errorMessageDiv.style.display = 'block';
+                document.getElementById('totalDeservedMarkAux').style.borderColor = 'red';
+                hasTotalError = true;
+            } else if (totalMaxScoreSum < weights.tab3MaxScoreSum && !hasInputError) {
+                errorMessageDiv.textContent = `خطأ: مجموع الأهمية النسبية (العلامة القصوى) يجب أن يكون ${weights.tab3MaxScoreSum}%. الرجاء التعديل.`;
+                errorMessageDiv.style.display = 'block';
+                document.getElementById('totalDeservedMarkAux').style.borderColor = 'red';
+                hasTotalError = true;
+            } else if (!hasInputError && !hasTotalError) {
+                errorMessageDiv.style.display = 'none';
+            }
+
+            updateSupportServicesTab4Summary();
+        }
+
+        function updateTab4Summary() {
+            const evaluationType = document.getElementById('evaluationType').value;
+            if (evaluationType === 'underTrial' || evaluationType === 'auxiliaryServices') {
+                return;
+            }
+
+            const tab3Mark = parseFloat(document.getElementById('totalDeservedMarkTab3').value) || 0;
+            let tab1Evaluation = 0;
+            
+            if (evaluationType === 'middle') {
+                tab1Evaluation = parseFloat(document.getElementById('finalMiddleManagementEvaluation').value) || 0;
+            } else {
+                tab1Evaluation = parseFloat(document.getElementById('finalEvaluation').value) || 0;
+            }
+            
+            const tab2Percentage = parseFloat(document.getElementById('totalDeservedPercentage').value) || 0;
+
+            document.getElementById('summaryTab3Mark').value = formatOutputValue(tab3Mark);
+            document.getElementById('summaryTab1Evaluation').value = formatOutputValue(tab1Evaluation);
+            document.getElementById('summaryTab2Percentage').value = formatOutputValue(tab2Percentage);
+
+            const finalTotalScore = tab3Mark + tab1Evaluation + tab2Percentage;
+            document.getElementById('finalTotalScore').value = formatOutputValue(finalTotalScore, 1);
+
+            let overallGrade = '';
+            if (evaluationType === 'middle') {
+                if (finalTotalScore >= 85) {
+                    overallGrade = 'انجز المهام بامتياز';
+                } else if (finalTotalScore >= 70) {
+                    overallGrade = 'إنجاز المهام بالمستوى المطلوب';
+                } else {
+                    overallGrade = 'إنجاز المهام بمستوى متوسط';
+                }
+            } else {
+                if (finalTotalScore >= 85) {
+                    overallGrade = 'انجز المهام بامتياز';
+                } else if (finalTotalScore >= 70) {
+                    overallGrade = 'إنجاز المهام بالمستوى المطلوب';
+                } else if (finalTotalScore >= 60) {
+                    overallGrade = 'إنجاز المهام بمستوى متوسط';
+                } else if (finalTotalScore >= 50) {
+                    overallGrade = 'إنجاز المهام دون المستوى المتوسط';
+                } else {
+                    overallGrade = 'إنجاز المهام بمستوى ضعيف';
+                }
+            }
+            document.getElementById('overallGrade').value = overallGrade;
+        }
+
+        function updateSupportServicesTab4Summary() {
+            const tabMark = parseFloat(document.getElementById('totalDeservedMarkAux').value) || 0;
+            const tab1Evaluation = parseFloat(document.getElementById('finalEvaluationAux').value) || 0;
+            const tab2Percentage = parseFloat(document.getElementById('totalDeservedPercentageAux').value) || 0;
+
+            document.getElementById('summarySupportServicesTabMark').value = formatOutputValue(tabMark);
+            document.getElementById('summarySupportServicesTab1Evaluation').value = formatOutputValue(tab1Evaluation);
+            document.getElementById('summarySupportServicesTab2Percentage').value = formatOutputValue(tab2Percentage);
+
+            const finalTotalScore = tabMark + tab1Evaluation + tab2Percentage;
+            document.getElementById('finalTotalScoreAux').value = formatOutputValue(finalTotalScore, 1);
+
+            let overallGrade = '';
+            if (finalTotalScore >= 85) {
+                overallGrade = 'انجز المهام بامتياز';
+            } else if (finalTotalScore >= 70) {
+                overallGrade = 'إنجاز المهام بالمستوى المطلوب';
+            } else if (finalTotalScore >= 60) {
+                overallGrade = 'إنجاز المهام بمستوى متوسط';
+            } else if (finalTotalScore >= 50) {
+                overallGrade = 'إنجاز المهام دون المستوى المتوسط';
+            } else {
+                overallGrade = 'إنجاز المهام بمستوى ضعيف';
+            }
+            document.getElementById('overallGradeAux').value = overallGrade;
+        }
+
+        function validateAndCalculateUnderTrialTab(inputElement) {
+            const row = inputElement.closest('tr');
+            const maxScoreCell = row.cells[2];
+            const maxScore = parseInt(maxScoreCell.textContent);
+            let achievedMark = parseFloat(inputElement.value);
+            const errorMessageDiv = document.getElementById('underTrial-error-message');
+
+            inputElement.style.borderColor = '';
+            errorMessageDiv.style.display = 'none';
+
+            if (isNaN(achievedMark) || achievedMark < 0) {
+                inputElement.style.borderColor = 'red';
+                errorMessageDiv.textContent = 'الرجاء إدخال رقم صحيح وموجب.';
+                errorMessageDiv.style.display = 'block';
+                inputElement.value = '';
+                calculateUnderTrialTab();
+                return;
+            }
+
+            if (achievedMark > maxScore) {
+                inputElement.style.borderColor = 'red';
+                errorMessageDiv.textContent = `خطأ: العلامة المتحققة لا يمكن أن تتجاوز العلامة القصوى (${maxScore}).`;
+                errorMessageDiv.style.display = 'block';
+                inputElement.value = maxScore;
+            }
+            calculateUnderTrialTab();
+        }
+
+        function calculateUnderTrialTab() {
+            let totalAchievedScore = 0;
+            const underTrialRows = document.querySelectorAll('#underTrial-tbody tr[data-item]');
+            const errorMessageDiv = document.getElementById('underTrial-error-message');
+            let hasError = false;
+            let hasEmptyField = false;
+            
+            underTrialRows.forEach(row => {
+                const achievedMarkInput = row.querySelector('.achieved-mark-underTrial');
+                const maxScoreCell = row.cells[2];
+                const maxScore = parseInt(maxScoreCell.textContent);
+                let achievedMark = parseFloat(achievedMarkInput.value) || 0;
+
+                if (achievedMarkInput.value === '' || achievedMarkInput.value === null) {
+                    achievedMarkInput.classList.add('required-input');
+                    hasEmptyField = true;
+                    totalAchievedScore += 0;
+                } else if (isNaN(achievedMark) || achievedMark < 0 || achievedMark > maxScore) {
+                    totalAchievedScore += 0;
+                    hasError = true;
+                } else {
+                    totalAchievedScore += achievedMark;
+                    achievedMarkInput.classList.remove('required-input');
+                }
+            });
+
+            document.getElementById('totalAchievedUnderTrial').value = formatOutputValue(totalAchievedScore, 0);
+
+            let overallGrade = '';
+            if (totalAchievedScore >= 85) {
+                overallGrade = 'انجز المهام بامتياز';
+            } else if (totalAchievedScore >= 70) {
+                overallGrade = 'إنجاز المهام بالمستوى المطلوب';
+            } else if (totalAchievedScore >= 60) {
+                overallGrade = 'إنجاز المهام بمستوى متوسط';
+            } else if (totalAchievedScore >= 50) {
+                overallGrade = 'إنجاز المهام دون المستوى المتوسط';
+            } else {
+                overallGrade = 'إنجاز المهام بمستوى ضعيف';
+            }
+            document.getElementById('overallGradeUnderTrial').value = overallGrade;
+
+            if (hasError) {
+                errorMessageDiv.textContent = 'الرجاء التأكد من إدخال قيم صحيحة لا تتجاوز العلامة القصوى لجميع البنود.';
+                errorMessageDiv.style.display = 'block';
+            } else if (hasEmptyField) {
+                errorMessageDiv.textContent = 'الرجاء إدخال قيمة في جميع حقول العلامة المتحققة.';
+                errorMessageDiv.style.display = 'block';
+            } else {
+                errorMessageDiv.style.display = 'none';
+            }
+        }
+
+        function resetForm() {
+            document.querySelectorAll('#tab1 input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.querySelectorAll('#tab1 input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+
+            document.querySelectorAll('#tab2 input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+
+            document.querySelectorAll('#tab3 input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+
+            document.querySelectorAll('#tab4 input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+
+            document.querySelectorAll('#underTrialTab input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+
+            document.querySelectorAll('#middleManagementTab input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+
+            document.querySelectorAll('[id^="supportServicesTab"] input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+            document.querySelectorAll('[id^="supportServicesTab"] input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+
+            document.querySelectorAll('.error-message').forEach(msg => {
+                msg.style.display = 'none';
+                msg.textContent = '';
+            });
+
+            document.querySelectorAll('input').forEach(input => {
+                input.style.borderColor = '';
+            });
+            
+            document.querySelectorAll('.required-input').forEach(input => {
+                input.classList.remove('required-input');
+            });
+            
+            location.reload();
+        }
+
+        /* === تم الإصلاح هنا: إزالة الاعتماد على window.event العام (غير مدعوم في Safari/iPhone) === */
+        function validateNumericInput(input) {
+            let value = input.value;
+            
+            value = value.replace(/[^0-9.-]/g, '');
+            
+            const dotCount = (value.match(/\./g) || []).length;
+            if (dotCount > 1) {
+                value = value.replace(/\.+$/, '');
+            }
+            
+            if (value.indexOf('-') > 0) {
+                value = value.replace(/-/g, '');
+            }
+            
+            input.value = value;
+        }
+    </script>
+</body>
+</html>
